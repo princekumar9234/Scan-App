@@ -8,6 +8,7 @@ const App = () => {
   return (
     <div>
       <Navbar/>
+      
      <Routes>
       <Route path="/login" element={<LoginPage/>} />
       <Route path="/register" element={<RegisterPage/>} />

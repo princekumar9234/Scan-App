@@ -34,7 +34,7 @@ const LoginPage = () => {
             type="text"
             name="email"
             placeholder="Enter your Email"
-            className="p-3  bg-black focus:border opacity-65 outline-none focus:border-emerald-400 rounded-xl text-sm "
+            className="p-3  bg-black focus:border opacity-65 outline-none focus:shadow-[0_8px_20px_rgba(2,180,120,0.2)] focus:border-emerald-400 rounded-xl text-sm "
           />
           <h4 className="mt-2 text-sm text-gray-300 opacity-65">Psssword</h4>
           <input
@@ -46,12 +46,12 @@ const LoginPage = () => {
             name="pasword "
             type={showPassword ? "text" : "password"}
             placeholder="Enter your password"
-            className="p-3  bg-black text-sm opacity-65  rounded-xl focus:border  outline-none focus:border-emerald-400 "
+            className="p-3  bg-black text-sm opacity-65  rounded-xl focus:border  focus:shadow-[0_8px_20px_rgba(2,180,120,0.2)] outline-none focus:border-emerald-400 "
           />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)} // click handler to toggle state
-            className="absolute bottom-68 right-27 md:right-[38%] md:bottom-70 text-emerald-600 hover:text-emerald-400 focus:outline-none cursor-pointer flex items-center justify-center"
+            className="absolute bottom-68 right-27 md:right-[38%] md:bottom-70 focus:shadow-[0_8px_20px_rgba(2,180,120,0.2)] text-emerald-600 hover:text-emerald-400 focus:outline-none cursor-pointer flex items-center justify-center"
           >
             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
