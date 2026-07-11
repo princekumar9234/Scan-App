@@ -1,10 +1,14 @@
 {
   "dependencies": {
+    "@imagekit/nodejs": "^7.9.1",
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dns": "^0.2.2",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "jest": "^30.4.2",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.7.4",
     "multer": "^2.2.0",
     "nodemon": "^3.1.14",

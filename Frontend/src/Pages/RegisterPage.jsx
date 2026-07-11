@@ -1,31 +1,71 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
+import axios from "axios";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConformPassword, setShowConformPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [username, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const [conformPassword, setConformPassword] = useState("");
+
+  const handleForm = (e) => {
+    e.preventDefault();
+    axios
+      .post("http://localhost:3000/register", {
+        username,
+        email,
+        password,
+      })
+      .then((res) => {
+        alert("user register successfully");
+        navigate("/login");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <div>
-      <form className="mt-2 ml-7 md:ml-[35%] w-fit m-4 rounded-xl bg-[#1c1c1c]">
-        
+      <form
+        onSubmit={(e) => {
+          handleForm(e);
+        }}
+        className="mt-2 ml-7 md:ml-[35%] w-fit m-4 rounded-xl bg-[#1c1c1c]"
+      >
         <div className="  p-7 gap-1  flex flex-col">
-          <h4 className="mt-2 opacity-90 text-center mb-3 text-lg font-bold">Create a new Account</h4>
+          <h4 className="mt-2 opacity-90 text-center mb-3 text-lg font-bold">
+            Create a new Account
+          </h4>
           <h4 className="mt-2 opacity-60 text-sm font-bold">Your Name</h4>
           <input
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+            value={username}
             type="text"
             placeholder="Enter your Full name"
             className="p-3 bg-black rounded-xl text-sm focus:shadow-[0_8px_20px_rgba(2,180,120,0.2)] focus:border-emerald-300 focus:border opacity-60 outline-none  "
           />
           <h4 className="mt-2 opacity-60 text-sm font-bold">Your Email</h4>
           <input
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
+            value={email}
             type="email"
             placeholder="Enter your email "
             className="p-3 bg-black rounded-xl text-sm focus:shadow-[0_8px_20px_rgba(2,180,120,0.2)] focus:border-emerald-300 focus:border opacity-60 outline-none  "
           />
           <h4 className="mt-2 opacity-60 text-sm font-bold">Password</h4>
           <input
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+            value={password}
             type={showPassword ? "text " : "password"}
             placeholder="Enter your Password"
             className=" p-3 bg-black rounded-xl text-sm focus:shadow-[0_8px_20px_rgba(2,180,120,0.2)] focus:border-emerald-300 focus:border opacity-60 outline-none  "
@@ -42,6 +82,10 @@ const RegisterPage = () => {
             Conform Password
           </h4>
           <input
+            onChange={(e) => {
+              setConformPassword(e.target.value);
+            }}
+            value={conformPassword}
             type={showConformPassword ? "text" : "password"}
             placeholder="Enter your Password"
             className="p-3 bg-black rounded-xl text-sm focus:border-emerald-300 focus:shadow-[0_8px_20px_rgba(2,180,120,0.2)] focus:border opacity-60 outline-none  "

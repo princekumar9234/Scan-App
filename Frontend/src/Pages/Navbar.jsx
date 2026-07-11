@@ -6,7 +6,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="relative">
+    <nav className="relative z-50">
       <div className="flex justify-between items-center py-4 px-6 ">
         {/* Logo */}
         <div className="font-bold text-2xl flex items-center whitespace-nowrap gap-1">
@@ -15,6 +15,9 @@ const Navbar = () => {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex space-x-8 px-10 text-lg">
+          <Link to="/" className=" hover:text-cyan-400 transition ">
+            DashBoard
+          </Link>
           <Link to="/login" className=" hover:text-cyan-400 transition ">
             Login
           </Link>
@@ -25,7 +28,7 @@ const Navbar = () => {
 
         {/* Hamburger Button */}
         <button
-          className="md:hidden w-10 h-10 flex items-center justify-center transform-none! filter-none! shadow-none!"
+          className="md:hidden w-10 h-10 flex items-center justify-center transform-none! filter-none! shadow-none! text-white"
           onClick={() => setIsOpen(!isOpen)}
         >
           {isOpen ? <X size={30} /> : <Menu size={30} />}
@@ -34,13 +37,16 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       <div
-        className={`md:hidden absolute left-0 right-0 bg-[#f0f2f5] px-6 shadow-md ${isOpen ? "block py-4" : "hidden"}`}
+        className={`md:hidden absolute left-0 right-0 bg-[#0c0f16]/95 backdrop-blur-md border-b border-neutral-850 px-6 shadow-xl transition-all duration-300 z-50 ${isOpen ? "block py-6" : "hidden"}`}
       >
-        <div className="flex flex-col text-lg gap-4">
-          <Link to="/loginpage" className=" hover:text-cyan-400 transition ">
+        <div className="flex flex-col text-lg gap-4 text-neutral-200">
+          <Link to="/" onClick={() => setIsOpen(false)} className=" hover:text-cyan-400 transition ">
+            DashBoard
+          </Link>
+          <Link to="/login" onClick={() => setIsOpen(false)} className=" hover:text-cyan-400 transition ">
             Login
           </Link>
-          <Link to="/registerpage" className=" hover:text-cyan-400 transition ">
+          <Link to="/register" onClick={() => setIsOpen(false)} className=" hover:text-cyan-400 transition ">
             Register
           </Link>
         </div>

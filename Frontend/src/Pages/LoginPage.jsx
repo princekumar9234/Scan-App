@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -11,9 +12,10 @@ const LoginPage = () => {
 
   const handleForm = (e) => {
     e.preventDefault();
-    console.log(email, password);
-    setEmail("");
-    setPassword("");
+    console.log(email,password);
+    setEmail("")
+    setPassword("")
+    
   };
   return (
     <div>
@@ -42,7 +44,7 @@ const LoginPage = () => {
               setPassword(e.target.value);
             }}
             value={password}
-            type="text"
+            
             name="pasword "
             type={showPassword ? "text" : "password"}
             placeholder="Enter your password"
