@@ -39,4 +39,39 @@ async function userRegiser(req, res) {
   });
 }
 
-module.exports = {userRegiser}
+async function userLogin(req,res) {
+  const { username, email, password } = req.body;
+
+  const user = await userModel.findOne({
+    $or: [{ email }, { username }],
+  });
+
+  if (!user) {
+    res.status(401).json({ message: "invalid Crendential" });
+  }
+
+  const invalidPassword = await bcrypt.compare(password, user.password);
+  if (!invalidPassword) {
+    return res.status(401).json({ message: "invalid Crendentials" });
+  }
+
+  const token = jwt.sign(
+    {
+      id: user._id,
+    },
+    process.env.JWT_SECRECT,
+  );
+
+  res.cookie("token", token);
+
+  res.status(200).json({
+    message: "User Login successfully",
+    user: {
+      id: user._id,
+      username: user.username,
+      email: user.email,
+    },
+  });
+}
+
+module.exports = { userRegiser, userLogin };

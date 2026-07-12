@@ -8,13 +8,11 @@ import Dashboard from "./Pages/Dashboard";
 const App = () => {
   return (
     <div>
-      <Navbar/>
-      
-     <Routes>
-      <Route path="/" element={<Dashboard/>} />
-      <Route path="/login" element={<LoginPage/>} />
-      <Route path="/register" element={<RegisterPage/>} />
-     </Routes>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+      </Routes>
     </div>
   );
 };

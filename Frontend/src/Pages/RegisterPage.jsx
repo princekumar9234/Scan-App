@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import axios from "axios";
+import { ConnectBackend } from "./ConnectBackend";
+import Navbar from "./Navbar";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -14,22 +16,23 @@ const RegisterPage = () => {
 
   const handleForm = (e) => {
     e.preventDefault();
-    axios
-      .post("http://localhost:3000/register", {
-        username,
-        email,
-        password,
-      })
+    ConnectBackend.post("/register", {
+      username,
+      email,
+      password,
+    })
       .then((res) => {
-        alert("user register successfully");
+        alert("Congrulations User Registered Successfully");
         navigate("/login");
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((error) => {
+        console.log(error.response.data.error.map((e) => e.msg));
+        alert(error.response.data.error.map((e) => e.msg));
       });
   };
   return (
     <div>
+      <Navbar />
       <form
         onSubmit={(e) => {
           handleForm(e);

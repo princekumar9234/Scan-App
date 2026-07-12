@@ -1,24 +1,41 @@
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
+import { ConnectBackend } from "./ConnectBackend";
+import toast from "react-hot-toast";
+import Navbar from "./Navbar";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
   const handleForm = (e) => {
     e.preventDefault();
-    console.log(email,password);
-    setEmail("")
-    setPassword("")
-    
+    if (!email.trim() || !password.trim()) {
+      alert("Please fill in all fields.");
+      return;
+    }
+    ConnectBackend.post("/login", {
+      email,
+      password,
+    })
+      .then((req) => {
+        alert("User Login Successfully !");
+        navigate("/");
+      })
+      .catch((error) => {
+        console.log(error.response.data)
+        alert(error.response.data.message);
+      });
   };
+
   return (
     <div>
+      <Navbar />
       <form
         onSubmit={(e) => {
           handleForm(e);
@@ -44,7 +61,6 @@ const LoginPage = () => {
               setPassword(e.target.value);
             }}
             value={password}
-            
             name="pasword "
             type={showPassword ? "text" : "password"}
             placeholder="Enter your password"

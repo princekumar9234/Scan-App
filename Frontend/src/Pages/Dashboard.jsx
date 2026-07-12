@@ -20,13 +20,13 @@ import {
 } from "lucide-react";
 import { MOCK_PRODUCTS } from "../Components/MockScanner";
 import { useNavigate } from "react-router-dom";
+import Navbar from "./Navbar";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [currentProduct, setCurrentProduct] = useState(MOCK_PRODUCTS.lays);
   const [isDemoRunning, setIsDemoRunning] = useState(false);
 
- 
   const startWatchDemo = () => {
     if (isDemoRunning) return;
     setIsDemoRunning(true);
@@ -46,8 +46,13 @@ const Dashboard = () => {
     }, 2000);
   };
 
-  return (
+  const handleClick = () => {
+    (alert("please Login First"), navigate("/login"));
+  };
+  return ( 
+    
     <div className="min-h-screen bg-[#07090e] text-white overflow-x-hidden font-sans relative">
+        <Navbar />
       {/* Background Radial Glow Details */}
       <div className="absolute top-[20%] left-[10%] w-112.5 h-112.5 bg-emerald-500/5 rounded-full filter blur-[120px] pointer-events-none"></div>
       <div className="absolute top-[35%] right-[5%] w-125 h-125 bg-[#0ea5e9]/5 rounded-full filter blur-[150px] pointer-events-none"></div>
@@ -84,7 +89,7 @@ const Dashboard = () => {
             {/* Call to Actions */}
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mb-10">
               <button
-                onClick={() => navigate("/login")}
+                onClick={(e) => handleClick(e)}
                 className="group px-6 py-4 rounded-xl font-bold bg-emerald-500 text-black hover:bg-emerald-400 hover:shadow-[0_0_30px_rgba(16,185,129,0.45)] flex items-center justify-center gap-3 transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer text-base"
               >
                 <Scan
@@ -394,9 +399,7 @@ const Dashboard = () => {
         {/* Features 6-Column Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-5">
           {/* Feature 1: Instant Scan */}
-          <div
-            className="group bg-[#0c0f16]/95 border border-neutral-850 p-5 rounded-2xl flex flex-col items-center text-center hover:border-emerald-500/35 hover:-translate-y-1 hover:shadow-[0_4px_20px_rgba(16,185,129,0.06)] transition-all duration-300"
-          >
+          <div className="group bg-[#0c0f16]/95 border border-neutral-850 p-5 rounded-2xl flex flex-col items-center text-center hover:border-emerald-500/35 hover:-translate-y-1 hover:shadow-[0_4px_20px_rgba(16,185,129,0.06)] transition-all duration-300">
             <div className="h-12 w-12 rounded-xl bg-emerald-950/30 border border-emerald-500/10 text-emerald-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
               <Scan size={22} className="stroke-[2.5]" />
             </div>
