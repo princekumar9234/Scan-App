@@ -174,7 +174,7 @@ const MockScanner = ({ isOpen, onClose, onScanSuccess }) => {
       <div className="relative w-full max-w-lg overflow-hidden rounded-3xl border border-neutral-800 bg-[#0c0f16]/95 p-6 text-white shadow-2xl shadow-emerald-950/20 animate-in fade-in zoom-in-95 duration-200">
         
         {/* Glowing border accent */}
-        <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-emerald-500 to-transparent"></div>
+        <div className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-transparent via-emerald-500 to-transparent"></div>
 
         {/* Header */}
         <div className="flex items-center justify-between border-b border-neutral-800/80 pb-4">
@@ -191,7 +191,7 @@ const MockScanner = ({ isOpen, onClose, onScanSuccess }) => {
         </div>
 
         {/* Main Body */}
-        <div className="my-6 min-h-[300px] flex flex-col justify-center items-center">
+        <div className="my-6 min-h-75 flex flex-col justify-center items-center">
           
           {/* Idle screen */}
           {scanMode === "idle" && (
@@ -213,9 +213,9 @@ const MockScanner = ({ isOpen, onClose, onScanSuccess }) => {
                   Use Device Camera
                 </button>
                 <div className="relative flex py-2 items-center">
-                  <div className="flex-grow border-t border-neutral-850"></div>
-                  <span className="flex-shrink mx-4 text-xs text-neutral-500 uppercase tracking-widest font-mono">Or Select Demo Scan</span>
-                  <div className="flex-grow border-t border-neutral-850"></div>
+                  <div className="grow border-t border-neutral-850"></div>
+                  <span className="shrink mx-4 text-xs text-neutral-500 uppercase tracking-widest font-mono">Or Select Demo Scan</span>
+                  <div className="grow border-t border-neutral-850"></div>
                 </div>
                 <div className="grid grid-cols-3 gap-2">
                   <button
@@ -243,7 +243,7 @@ const MockScanner = ({ isOpen, onClose, onScanSuccess }) => {
 
           {/* Camera Scan Screen */}
           {scanMode === "camera" && (
-            <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-black border border-neutral-800 flex items-center justify-center">
+            <div className="relative w-full aspect-4/3 rounded-2xl overflow-hidden bg-black border border-neutral-800 flex items-center justify-center">
               {cameraAllowed === null && (
                 <div className="flex flex-col items-center gap-3 text-neutral-400 text-sm">
                   <RefreshCw className="animate-spin text-emerald-400" size={24} />
@@ -269,7 +269,7 @@ const MockScanner = ({ isOpen, onClose, onScanSuccess }) => {
                     className="w-full h-full object-cover"
                   />
                   {/* Cybernetic Scan Overlay */}
-                  <div className="absolute inset-0 border-[2px] border-emerald-500/20 pointer-events-none">
+                  <div className="absolute inset-0 border-2 border-emerald-500/20 pointer-events-none">
                     {/* Glowing corners */}
                     <div className="absolute top-4 left-4 w-6 h-6 border-t-2 border-l-2 border-emerald-400"></div>
                     <div className="absolute top-4 right-4 w-6 h-6 border-t-2 border-r-2 border-emerald-400"></div>

@@ -52,7 +52,7 @@ async function userLogin(req,res) {
 
   const invalidPassword = await bcrypt.compare(password, user.password);
   if (!invalidPassword) {
-    return res.status(401).json({ message: "invalid Crendentials" });
+    return res.status(401).json({ message: "Wrong Password! " });
   }
 
   const token = jwt.sign(

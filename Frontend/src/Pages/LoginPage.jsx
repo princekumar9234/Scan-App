@@ -28,7 +28,8 @@ const LoginPage = () => {
         navigate("/");
       })
       .catch((error) => {
-        console.log(error.response.data)
+        console.log(error.response.data);
+        // console.log(error.response);
         alert(error.response.data.message);
       });
   };
