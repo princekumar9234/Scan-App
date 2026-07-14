@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import axios from "axios";
 import { ConnectBackend } from "./ConnectBackend";
-import Navbar from "./Navbar";
+import Navbar from "./Navbar"
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -37,9 +37,9 @@ const RegisterPage = () => {
         onSubmit={(e) => {
           handleForm(e);
         }}
-        className="mt-2 ml-7 md:ml-[35%] w-fit m-4 rounded-xl bg-[#1c1c1c]"
+        className="mt-2 ml-6 md:ml-[35%] w-fit m-4 rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.6)] bg-[#1c1c1c]"
       >
-        <div className="  p-7 gap-1  flex flex-col">
+        <div className="  p-7 pb-3 gap-1 mt-6  flex flex-col">
           <h4 className="mt-2 opacity-90 text-center mb-3 text-lg font-bold">
             Create a new Account
           </h4>
@@ -77,7 +77,7 @@ const RegisterPage = () => {
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)} // click handler to toggle state
-            className="absolute bottom-69 right-24 md:right-[38%]  md:bottom-71 text-emerald-600 hover:text-emerald-400 focus:outline-none cursor-pointer flex items-center justify-center"
+            className="absolute bottom-62 right-19 md:right-[38%]  md:bottom-64 text-emerald-600 hover:text-emerald-400 focus:outline-none cursor-pointer flex items-center justify-center"
           >
             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
@@ -91,22 +91,22 @@ const RegisterPage = () => {
             value={conformPassword}
             type={showConformPassword ? "text" : "password"}
             placeholder="Enter your Password"
-            className="p-3 bg-black rounded-xl text-sm focus:border-emerald-300 focus:shadow-[0_8px_20px_rgba(2,180,120,0.2)] focus:border opacity-60 outline-none  "
+            className="p-3 bg-black rounded-xl  text-sm focus:border-emerald-300 focus:shadow-[0_8px_20px_rgba(2,180,120,0.2)] focus:border opacity-60 outline-none  "
           />
 
           <button
             type="button"
             onClick={() => setShowConformPassword(!showConformPassword)} // click handler to toggle state
-            className="absolute bottom-48 right-24 md:right-[38%] md:bottom-50 focus:shadow-[0_8px_20px_rgba(2,180,120,0.2)] text-emerald-500 focus:outline-none cursor-pointer flex items-center justify-center"
+            className="absolute bottom-41 right-19 md:right-[38%] md:bottom-43 focus:shadow-[0_8px_20px_rgba(2,180,120,0.2)] text-emerald-500 focus:outline-none cursor-pointer flex items-center justify-center"
           >
             {showConformPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
-          <br />
-          <button className="px-27 md:px-33  py-3 bg-emerald-400 outline-none rounded focus:shadow-[0_8px_20px_rgba(2,180,120,0.2)] text-black font-bold text-sm shadow-[0_8px_20px_rgba(16,185,129,0.45)] hover:shadow-[0_10px_25px_rgba(16,185,129,0.6)] ">
+        
+          <button className="px-29 md:px-33 mt-6 py-3  bg-emerald-400 outline-none rounded focus:shadow-[0_8px_20px_rgba(2,180,120,0.2)] text-black font-bold text-sm shadow-[0_8px_20px_rgba(16,185,129,0.45)] hover:shadow-[0_10px_25px_rgba(16,185,129,0.6)] ">
             Create Account
           </button>
         </div>
-        <div className="flex gap-2 justify-center pb-5 text-lg">
+        <div className="flex gap-2  justify-center pb-4 text-lg">
           You have an account ?
           <button
             onClick={() => {

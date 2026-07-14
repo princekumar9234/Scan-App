@@ -51,7 +51,7 @@ const Dashboard = () => {
   };
   return ( 
     
-    <div className="min-h-screen bg-[#07090e] text-white overflow-x-hidden font-sans relative">
+    <div className="min-h-screen  overflow-x-hidden font-sans relative">
         <Navbar />
       {/* Background Radial Glow Details */}
       <div className="absolute top-[20%] left-[10%] w-112.5 h-112.5 bg-emerald-500/5 rounded-full filter blur-[120px] pointer-events-none"></div>

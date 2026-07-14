@@ -7,9 +7,9 @@ const Navbar = () => {
 
   return (
     <nav className="relative z-50">
-      <div className="flex justify-between items-center py-4 px-6 ">
+      <div className="flex justify-between  border-2 m-3 mt-3 rounded-2xl border-black shadow-[0_8px_20px_rgba(0,0,0,0.6)]  items-center py-4 px-6 ">
         {/* Logo */}
-        <div className="font-bold text-2xl flex items-center whitespace-nowrap gap-1">
+        <div className="font-bold text-2xl flex items-center whitespace-nowrap gap-2">
           <span>Scan</span> <span className="text-yellow-600">App</span>
         </div>
 
@@ -37,16 +37,28 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       <div
-        className={`md:hidden absolute left-0 right-0 bg-[#0c0f16]/95 backdrop-blur-md border-b border-neutral-850 px-6 shadow-xl transition-all duration-300 z-50 ${isOpen ? "block py-6" : "hidden"}`}
+        className={`md:hidden absolute left-0 right-0 bg-[#0c0f16]/95 backdrop-blur-md rounded-xl ml-3 mr-4 px-6 shadow-xl transition-all duration-300  ${isOpen ? "block py-6" : "hidden"}`}
       >
         <div className="flex flex-col text-lg gap-4 text-neutral-200">
-          <Link to="/" onClick={() => setIsOpen(false)} className=" hover:text-cyan-400 transition ">
+          <Link
+            to="/"
+            onClick={() => setIsOpen(false)}
+            className=" hover:text-cyan-400 transition "
+          >
             DashBoard
           </Link>
-          <Link to="/login" onClick={() => setIsOpen(false)} className=" hover:text-cyan-400 transition ">
+          <Link
+            to="/login"
+            onClick={() => setIsOpen(false)}
+            className=" hover:text-cyan-400 transition "
+          >
             Login
           </Link>
-          <Link to="/register" onClick={() => setIsOpen(false)} className=" hover:text-cyan-400 transition ">
+          <Link
+            to="/register"
+            onClick={() => setIsOpen(false)}
+            className=" hover:text-cyan-400 transition "
+          >
             Register
           </Link>
         </div>
@@ -54,5 +66,6 @@ const Navbar = () => {
     </nav>
   );
 };
+
 
 export default Navbar;

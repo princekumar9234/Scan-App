@@ -43,7 +43,7 @@ const LoginPage = () => {
         }}
         className="flex flex-col justify-center items-center  mt-22 "
       >
-        <div className="flex flex-col gap-2 border-2 p-7 rounded-xl border-black bg-[#1c1c1c]">
+        <div className="flex flex-col gap-2 shadow-[0_8px_20px_rgba(0,0,0,0.6)] p-7 rounded-xl border-black bg-[#1c1c1c]">
           <h2 className="text-center text-lg font-bold mb-4">Welcome Back </h2>
           <h4 className="text-sm text-gray-300 opacity-65">Email Address</h4>
           <input
@@ -70,7 +70,7 @@ const LoginPage = () => {
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)} // click handler to toggle state
-            className="absolute bottom-68 right-27 md:right-[38%] md:bottom-70 focus:shadow-[0_8px_20px_rgba(2,180,120,0.2)] text-emerald-600 hover:text-emerald-400 focus:outline-none cursor-pointer flex items-center justify-center"
+            className="absolute bottom-65 right-27 md:right-[38%] md:bottom-67 focus:shadow-[0_8px_20px_rgba(2,180,120,0.2)] text-emerald-600 hover:text-emerald-400 focus:outline-none cursor-pointer flex items-center justify-center"
           >
             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
