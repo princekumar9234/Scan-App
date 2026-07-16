@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { ConnectBackend } from "./ConnectBackend";
+import { ClientServer } from "./ClientServer";
 import toast from "react-hot-toast";
 import Navbar from "./Navbar";
 
@@ -19,18 +19,19 @@ const LoginPage = () => {
       alert("Please fill in all fields.");
       return;
     }
-    ConnectBackend.post("/login", {
+    ClientServer.post("/login", {
       email,
       password,
     })
       .then((req) => {
         alert("User Login Successfully !");
-        navigate("/");
+        navigate("/main");
       })
       .catch((error) => {
-        console.log(error.response.data);
-        // console.log(error.response);
+        console.log(error.response.data.message);
         alert(error.response.data.message);
+        setEmail("");
+        setPassword("");
       });
   };
 

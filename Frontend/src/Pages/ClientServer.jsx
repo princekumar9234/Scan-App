@@ -1,6 +1,8 @@
 import React from "react";
 import axios from "axios";
 
-export const ConnectBackend = axios.create({
+ClientServer = axios.create({
   baseURL: "http://localhost:3000",
 });
+
+export default ClientServer;

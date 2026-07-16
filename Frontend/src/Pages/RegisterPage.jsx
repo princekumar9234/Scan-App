@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import axios from "axios";
-import { ConnectBackend } from "./ConnectBackend";
-import Navbar from "./Navbar"
+import { ClientServer } from "./ClientServer";
+import Navbar from "./Navbar";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -16,7 +16,12 @@ const RegisterPage = () => {
 
   const handleForm = (e) => {
     e.preventDefault();
-    ConnectBackend.post("/register", {
+    if (!email.trim() || !password.trim()) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    ClientServer.post("/register", {
       username,
       email,
       password,
@@ -26,13 +31,21 @@ const RegisterPage = () => {
         navigate("/login");
       })
       .catch((error) => {
-        console.log(error.response.data.error.map((e) => e.msg));
-        alert(error.response.data.error.map((e) => e.msg));
+        if (error.response.status === 409) {
+          alert(error.response.data.message);
+        } else if (error.response.status === 400) {
+          // console.log(error.response.data.error.map((e) => e.msg))
+          alert(error.response.data.error.map((e) => e.msg));
+        } else {
+          console.log(error);
+          alert("Please try again Check Your internet Connections !");
+        }
       });
   };
   return (
     <div>
       <Navbar />
+
       <form
         onSubmit={(e) => {
           handleForm(e);
@@ -101,7 +114,7 @@ const RegisterPage = () => {
           >
             {showConformPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
-        
+
           <button className="px-29 md:px-33 mt-6 py-3  bg-emerald-400 outline-none rounded focus:shadow-[0_8px_20px_rgba(2,180,120,0.2)] text-black font-bold text-sm shadow-[0_8px_20px_rgba(16,185,129,0.45)] hover:shadow-[0_10px_25px_rgba(16,185,129,0.6)] ">
             Create Account
           </button>

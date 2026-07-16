@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 
-const Navbar = () => {
+const HomeNav = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -10,7 +10,7 @@ const Navbar = () => {
       <div className="flex justify-between  border-2 m-3 mt-3 rounded-2xl border-black shadow-[0_8px_20px_rgba(0,0,0,0.6)]  items-center py-4 px-6 ">
         {/* Logo */}
         <div className="font-bold text-2xl flex items-center whitespace-nowrap gap-2">
-          <span>Scan</span> <span className="text-yellow-600">App</span>
+          <span>Welcome ,</span> <span className="text-yellow-600"></span>
         </div>
 
         {/* Desktop Menu */}
@@ -18,13 +18,14 @@ const Navbar = () => {
           <Link to="/" className=" hover:text-cyan-400 transition ">
             DashBoard
           </Link>
-          <Link to="/login" className=" hover:text-cyan-400 transition ">
-            Login
-          </Link>
-          <Link to="/register" className=" hover:text-cyan-400 transition ">
-            Register
-          </Link>
           
+          <Link to="/camera" className=" hover:text-cyan-400 transition ">
+            Camera
+          </Link>
+
+          <Link to="logout" className=" hover:text-cyan-400 transition ">
+            Logout
+          </Link>
         </div>
 
         {/* Hamburger Button */}
@@ -48,26 +49,26 @@ const Navbar = () => {
           >
             DashBoard
           </Link>
-          <Link
-            to="/login"
-            onClick={() => setIsOpen(false)}
-            className=" hover:text-cyan-400 transition "
-          >
-            Login
-          </Link>
-          <Link
-            to="/register"
-            onClick={() => setIsOpen(false)}
-            className=" hover:text-cyan-400 transition "
-          >
-            Register
-          </Link>
           
+          <Link
+            to="/camera"
+            onClick={() => setIsOpen(false)}
+            className=" hover:text-cyan-400 transition "
+          >
+            Camera
+          </Link>
+
+          <Link
+            to="/logout"
+            onClick={() => setIsOpen(false)}
+            className=" hover:text-cyan-400 transition "
+          >
+            LogOut
+          </Link>
         </div>
       </div>
     </nav>
   );
 };
 
-
-export default Navbar;
+export default HomeNav;
