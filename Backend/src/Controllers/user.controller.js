@@ -39,7 +39,7 @@ async function userRegiser(req, res) {
   });
 }
 
-async function userLogin(req,res) {
+async function userLogin(req, res) {
   const { username, email, password } = req.body;
 
   const user = await userModel.findOne({
@@ -74,4 +74,12 @@ async function userLogin(req,res) {
   });
 }
 
-module.exports = { userRegiser, userLogin };
+async function userLogOut(req, res) {
+  res.clearCookie("token");
+  return res.status(200).json({
+    message: "User LogOut Successfully !",
+   
+  });
+}
+
+module.exports = { userRegiser, userLogin, userLogOut };

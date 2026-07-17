@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import axios from "axios";
-import  ClientServer  from "./ClientServer";
+import ClientServer from "./ClientServer";
 import Navbar from "./Navbar";
 
 const RegisterPage = () => {
@@ -27,7 +27,8 @@ const RegisterPage = () => {
       password,
     })
       .then((res) => {
-        alert("Congrulations User Registered Successfully");
+        alert(res.data.message);
+        // console.log(res)
         navigate("/login");
       })
       .catch((error) => {

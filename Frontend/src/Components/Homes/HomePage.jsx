@@ -5,8 +5,9 @@ const HomePage = () => {
   return (
     <div>
         <HomeNav/>
-        HomePage
-
+        <div>
+          
+        </div>
     </div>
   )
 }
