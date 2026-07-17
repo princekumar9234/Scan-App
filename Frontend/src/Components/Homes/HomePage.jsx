@@ -1,12 +1,14 @@
 import React from 'react'
 import HomeNav from './HomeNav'
 
-const Main = () => {
+const HomePage = () => {
   return (
     <div>
         <HomeNav/>
+        HomePage
+
     </div>
   )
 }
 
-export default Main
+export default HomePage

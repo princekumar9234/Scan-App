@@ -5,8 +5,9 @@ import RegisterPage from "./Pages/RegisterPage";
 import LoginPage from "./Pages/LoginPage";
 import Dashboard from "./Pages/Dashboard";
 import Camera from "./Components/Homes/Camera";
-import Main from "./Components/Homes/Main";
+
 import { LogOut } from "lucide-react";
+import HomePage from "./Components/Homes/HomePage";
 
 const App = () => {
   return (
@@ -16,8 +17,8 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/camera" element={<Camera />} />
-        <Route path="/main" element ={<Main/> } />
-        <Route path="/logout" element ={<LogOut/> } />
+        <Route path="/homepage" element={<HomePage />} />
+        <Route path="/logout" element={<LogOut />} />
       </Routes>
     </div>
   );

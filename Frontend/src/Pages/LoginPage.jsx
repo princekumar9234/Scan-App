@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { ClientServer } from "./ClientServer";
+import  ClientServer  from "./ClientServer";
 import toast from "react-hot-toast";
 import Navbar from "./Navbar";
 
@@ -25,7 +25,7 @@ const LoginPage = () => {
     })
       .then((req) => {
         alert("User Login Successfully !");
-        navigate("/main");
+        navigate("/homepage");
       })
       .catch((error) => {
         console.log(error.response.data.message);
