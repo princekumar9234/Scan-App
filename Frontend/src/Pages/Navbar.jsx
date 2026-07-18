@@ -24,9 +24,6 @@ const Navbar = () => {
           <Link to="/register" className=" hover:text-cyan-400 transition ">
             Register
           </Link>
-          <Link to="/camera" className=" hover:text-cyan-400 transition ">
-            Camera
-          </Link>
         </div>
 
         {/* Hamburger Button */}
@@ -63,13 +60,6 @@ const Navbar = () => {
             className=" hover:text-cyan-400 transition "
           >
             Register
-          </Link>
-          <Link
-            to="/camera"
-            onClick={() => setIsOpen(false)}
-            className=" hover:text-cyan-400 transition "
-          >
-            Camera
           </Link>
         </div>
       </div>

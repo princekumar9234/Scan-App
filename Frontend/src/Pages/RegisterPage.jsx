@@ -28,7 +28,9 @@ const RegisterPage = () => {
     })
       .then((res) => {
         alert(res.data.message);
-        // console.log(res)
+        if (res.data.user) {
+          localStorage.setItem("user", JSON.stringify(res.data.user));
+        }
         navigate("/login");
       })
       .catch((error) => {

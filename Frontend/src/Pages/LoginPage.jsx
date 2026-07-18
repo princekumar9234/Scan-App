@@ -26,6 +26,9 @@ const LoginPage = () => {
       .then((res) => {
         console.log(res);
         alert(res.data.message);
+        if (res.data.user) {
+          localStorage.setItem("user", JSON.stringify(res.data.user));
+        }
         navigate("/homepage");
       })
       .catch((error) => {

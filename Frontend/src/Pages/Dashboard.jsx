@@ -552,26 +552,6 @@ const Dashboard = () => {
           </div>
         </div>
       </section>
-
-      <style>{`
-        @keyframes laser {
-          0%, 100% { top: 15%; }
-          50% { top: 85%; }
-        }
-        .animate-laser {
-          animation: laser 3.5s infinite ease-in-out;
-        }
-        .scrollbar-thin::-webkit-scrollbar {
-          width: 3px;
-        }
-        .scrollbar-thin::-webkit-scrollbar-track {
-          background: #090b0e;
-        }
-        .scrollbar-thin::-webkit-scrollbar-thumb {
-          background: #1f2937;
-          border-radius: 9px;
-        }
-      `}</style>
     </div>
   );
 };

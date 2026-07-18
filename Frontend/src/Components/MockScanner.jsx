@@ -340,17 +340,6 @@ const MockScanner = ({ isOpen, onClose, onScanSuccess }) => {
         </div>
 
       </div>
-      
-      {/* Custom Styles */}
-      <style>{`
-        @keyframes scan {
-          0%, 100% { top: 10%; }
-          50% { top: 90%; }
-        }
-        .animate-scan {
-          animation: scan 2s infinite ease-in-out;
-        }
-      `}</style>
     </div>
   );
 };

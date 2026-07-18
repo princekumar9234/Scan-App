@@ -11,7 +11,11 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.2",
+    "@zxing/browser": "^0.2.1",
+    "@zxing/library": "^0.23.0",
     "axios": "^1.18.1",
+    "framer-motion": "^11.11.11",
+    "html5-qrcode": "^2.3.8",
     "lucide-react": "^1.24.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
