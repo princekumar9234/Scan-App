@@ -91,7 +91,7 @@ const RegisterPage = () => {
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)} // click handler to toggle state
-            className="absolute bottom-101 right-22 md:right-[38%]  md:bottom-64 text-emerald-600 hover:text-emerald-400 focus:outline-none cursor-pointer flex items-center justify-center"
+            className="absolute bottom-102 right-21 md:right-[38%]  md:bottom-64 text-emerald-600 hover:text-emerald-400 focus:outline-none cursor-pointer flex items-center justify-center"
           >
             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
@@ -111,7 +111,7 @@ const RegisterPage = () => {
           <button
             type="button"
             onClick={() => setShowConformPassword(!showConformPassword)} // click handler to toggle state
-            className="absolute bottom-80 right-22 md:right-[38%] md:bottom-43 focus:shadow-[0_8px_20px_rgba(2,180,120,0.2)] text-emerald-500 focus:outline-none cursor-pointer flex items-center justify-center"
+            className="absolute bottom-81 right-21 md:right-[38%] md:bottom-43 focus:shadow-[0_8px_20px_rgba(2,180,120,0.2)] text-emerald-500 focus:outline-none cursor-pointer flex items-center justify-center"
           >
             {showConformPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
