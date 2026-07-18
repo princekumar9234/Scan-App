@@ -1,9 +1,6 @@
 const { analyzeNutrition } = require("./health.service");
 
-/**
- * Product Service
- * Fetches product data from Open Food Facts API and processes it.
- */
+
 async function getProductByBarcode(barcode) {
   try {
     const apiBaseUrl =

@@ -8,7 +8,12 @@ const historyRouter = require("./routes/history.route");
 const favoriteRouter = require("./routes/favorite.route");
 
 app.use(express.json());
-app.use(cors({ origin: true, credentials: true }));
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:5173", // Vercel URL env mein set karo
+    credentials: true, // cookies allow karta hai
+  })
+);
 app.use(cookieParser());
 app.use("/", userRouter);
 app.use("/api/products", productRouter);

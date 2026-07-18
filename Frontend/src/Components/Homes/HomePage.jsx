@@ -35,6 +35,7 @@ const HomePage = () => {
     setIsLoading(true);
     try {
       const res = await ClientServer.get("/api/history/stats/summary");
+      console.log(res)
       if (res.data && res.data.success) {
         setStats(res.data.data);
       }

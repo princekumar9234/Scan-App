@@ -27,7 +27,12 @@ async function userRegiser(req, res) {
     process.env.JWT_SECRECT,
   );
 
-  res.cookie("token", token);
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: true,       // HTTPS pe hi bhejo (production)
+    sameSite: "None",  // Cross-domain cookies ke liye zaroori
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 din
+  });
 
   res.status(200).json({
     message: "user registered successfully",
@@ -62,7 +67,12 @@ async function userLogin(req, res) {
     process.env.JWT_SECRECT,
   );
 
-  res.cookie("token", token);
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: true,       // HTTPS pe hi bhejo (production)
+    sameSite: "None",  // Cross-domain cookies ke liye zaroori
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 din
+  });
 
   res.status(200).json({
     message: "User Login successfully",
