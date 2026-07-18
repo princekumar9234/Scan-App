@@ -6,7 +6,9 @@ const { analyzeNutrition } = require("./health.service");
  */
 async function getProductByBarcode(barcode) {
   try {
-    const apiBaseUrl = process.env.FOOD_API_URL;
+    const apiBaseUrl =
+      process.env.FOOD_API_URL ||
+      "https://world.openfoodfacts.org/api/v2/product/";
     const response = await fetch(`${apiBaseUrl}${barcode}.json`);
 
     if (!response.ok) {
@@ -70,7 +72,6 @@ async function getProductByBarcode(barcode) {
   } catch (error) {
     console.error("Error inside ProductService:", error);
     throw error;
-    console.log(error)
   }
 }
 
