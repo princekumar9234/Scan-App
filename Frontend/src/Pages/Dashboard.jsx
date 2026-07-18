@@ -49,10 +49,9 @@ const Dashboard = () => {
   const handleClick = () => {
     (alert("please Login First"), navigate("/login"));
   };
-  return ( 
-    
+  return (
     <div className="min-h-screen  overflow-x-hidden font-sans relative">
-        <Navbar />
+      <Navbar />
       {/* Background Radial Glow Details */}
       <div className="absolute top-[20%] left-[10%] w-112.5 h-112.5 bg-emerald-500/5 rounded-full filter blur-[120px] pointer-events-none"></div>
       <div className="absolute top-[35%] right-[5%] w-125 h-125 bg-[#0ea5e9]/5 rounded-full filter blur-[150px] pointer-events-none"></div>
@@ -147,232 +146,238 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Right Column: Physical mockup back and iPhone result overlap */}
-          <div className="lg:col-span-5 relative flex justify-center items-center h-135 w-full mt-10 lg:mt-0">
-            {/* 1. Behind the phone: Styled packaging mockup */}
-            <div className="absolute left-[8%] md:left-[12%] lg:left-[5%] top-[12%] w-47.5 h-85 rounded-2xl bg-linear-to-b from-[#eab308] to-[#ca8a04] border border-yellow-400/20 shadow-xl overflow-hidden hidden sm:flex flex-col justify-between p-4 -rotate-6 opacity-70 hover:opacity-85 transition-all duration-500">
-              {/* Layout for mock chip bag */}
-              <div className="flex flex-col items-center">
-                <span className="text-[10px] font-mono tracking-widest text-black/75 uppercase font-bold">
-                  CLASSIC PACK
-                </span>
-                <div className="w-14 h-14 rounded-full bg-red-600 border border-red-500 shadow-md flex items-center justify-center mt-6">
-                  <span className="text-white text-xs font-extrabold uppercase italic tracking-tighter">
-                    Lay's
+          {/* Right Column: Phone mockup + steps */}
+          <div className="lg:col-span-5 flex flex-col xl:flex-row gap-6 items-center justify-center mt-10 lg:mt-0">
+            {/* Phone + Chip bag wrapper */}
+            <div
+              className="relative flex justify-center items-center w-full"
+              style={{ minHeight: "480px" }}
+            >
+              {/* 1. Behind the phone: Styled packaging mockup */}
+              <div className="absolute left-[2%] sm:left-[8%] lg:left-[0%] top-[8%] w-40 h-72 rounded-2xl bg-linear-to-b from-[#eab308] to-[#ca8a04] border border-yellow-400/20 shadow-xl overflow-hidden hidden sm:flex flex-col justify-between p-4 -rotate-6 opacity-70 hover:opacity-85 transition-all duration-500">
+                {/* Layout for mock chip bag */}
+                <div className="flex flex-col items-center">
+                  <span className="text-[10px] font-mono tracking-widest text-black/75 uppercase font-bold">
+                    CLASSIC PACK
                   </span>
-                </div>
-              </div>
-
-              {/* Scanner effect area */}
-              <div className="relative bg-white/95 rounded p-2 flex flex-col items-center">
-                {/* Barcode visual */}
-                <div className="flex gap-0.5 items-end justify-center h-10 w-full mb-1">
-                  {[1, 3, 2, 4, 1, 3, 1, 4, 2, 1, 4, 3, 2, 1, 3, 1, 4].map(
-                    (w, idx) => (
-                      <div
-                        key={idx}
-                        style={{ width: `${w * 1.5}px` }}
-                        className="h-full bg-black"
-                      ></div>
-                    ),
-                  )}
-                </div>
-                <span className="text-[7px] font-mono text-black">
-                  284000 159340
-                </span>
-
-                {/* Scanning green line animation */}
-                <div className="absolute inset-x-0 h-0.5 bg-emerald-500 shadow-[0_0_8px_#10b981] top-1/2 -translate-y-1/2 animate-laser"></div>
-              </div>
-            </div>
-
-            {/* 2. Front phone mockup (Interactive details) */}
-            <div className="relative z-20 w-68.75 h-130 rounded-[38px] border-8 border-neutral-800 bg-black shadow-2xl shadow-emerald-950/20 flex flex-col overflow-hidden select-none hover:border-neutral-750 transition-all duration-300">
-              {/* iPhone top sensor bar */}
-              <div className="absolute top-0 inset-x-0 h-5 bg-black flex justify-between px-6 items-center text-[9px] text-neutral-400 font-mono z-30">
-                <span>9:41</span>
-                <div className="w-16 h-3.5 bg-neutral-900 rounded-full border border-neutral-800/60 absolute left-1/2 -translate-x-1/2 top-1"></div>
-                <div className="flex items-center gap-1">
-                  <Wifi size={8} />
-                  <Battery size={10} className="rotate-0" />
-                </div>
-              </div>
-
-              {/* Internal phone app contents */}
-              <div className="flex-1 bg-[#090b0e] pt-6 flex flex-col text-left">
-                {/* Navigation Bar inside App */}
-                <div className="flex items-center justify-between px-4 py-2 border-b border-neutral-900/60 bg-[#090b0e]/90">
-                  <button className="text-emerald-400 hover:text-emerald-300">
-                    <ArrowLeft size={14} />
-                  </button>
-                  <span className="text-xs font-bold text-neutral-300 tracking-wide">
-                    Scan Result
-                  </span>
-                  <div className="w-3.5 h-3.5"></div>
-                </div>
-
-                {/* Scanned product info container */}
-                <div className="flex-1 overflow-y-auto px-4 py-3 scrollbar-thin">
-                  {/* Product card */}
-                  <div className="relative rounded-2xl bg-neutral-900/70 border border-neutral-800/80 p-3 flex flex-col items-center text-center mb-3.5">
-                    {/* Glowing background behind image */}
-                    <div className="absolute top-2 w-14 h-14 bg-emerald-500/10 rounded-full filter blur-xl"></div>
-
-                    <div className="w-16 h-16 rounded-xl bg-neutral-950 border border-neutral-800 overflow-hidden flex items-center justify-center p-1.5 mb-2 relative z-10">
-                      <img
-                        src={currentProduct.image}
-                        alt={currentProduct.name}
-                        className="w-full h-full object-contain rounded"
-                      />
-                    </div>
-                    <h3 className="font-bold text-sm text-neutral-100 leading-tight">
-                      {currentProduct.name}
-                    </h3>
-                    <p className="text-[10px] text-neutral-500 mt-0.5">
-                      {currentProduct.category} • {currentProduct.brand}
-                    </p>
-
-                    {/* Unified health badge score */}
-                    <div className="flex items-center gap-2 mt-3.5 w-full bg-neutral-950/60 p-2 rounded-xl border border-neutral-900">
-                      {/* Radial score circle */}
-                      <div className="relative flex items-center justify-center w-9 h-9 rounded-full border border-neutral-800 bg-neutral-950">
-                        <span className="text-[10px] font-bold text-emerald-400 font-mono">
-                          {currentProduct.score}
-                        </span>
-                        <span className="absolute text-[6px] text-neutral-500 font-mono bottom-1">
-                          /100
-                        </span>
-                      </div>
-
-                      <div className="flex-1 text-left">
-                        <span
-                          className={`inline-block text-[9px] font-bold px-1.5 py-0.5 rounded-md border ${currentProduct.gradeColor}`}
-                        >
-                          {currentProduct.grade}
-                        </span>
-                      </div>
-                    </div>
+                  <div className="w-14 h-14 rounded-full bg-red-600 border border-red-500 shadow-md flex items-center justify-center mt-6">
+                    <span className="text-white text-xs font-extrabold uppercase italic tracking-tighter">
+                      Lay's
+                    </span>
                   </div>
+                </div>
 
-                  {/* Nutrients Metrics Cards */}
-                  <div className="grid grid-cols-4 gap-1.5 mb-4">
-                    {Object.entries(currentProduct.metrics).map(
-                      ([key, metric]) => (
+                {/* Scanner effect area */}
+                <div className="relative bg-white/95 rounded p-2 flex flex-col items-center">
+                  {/* Barcode visual */}
+                  <div className="flex gap-0.5 items-end justify-center h-10 w-full mb-1">
+                    {[1, 3, 2, 4, 1, 3, 1, 4, 2, 1, 4, 3, 2, 1, 3, 1, 4].map(
+                      (w, idx) => (
                         <div
-                          key={key}
-                          className="bg-neutral-950/70 border border-neutral-900/80 rounded-xl p-1.5 flex flex-col items-center justify-center text-center"
-                        >
-                          <span className="text-[8px] text-neutral-500 uppercase tracking-wider">
-                            {key}
-                          </span>
-                          <span
-                            className={`text-[10px] font-bold mt-0.5 ${
-                              metric.status === "high"
-                                ? "text-amber-500"
-                                : metric.status === "moderate"
-                                  ? "text-yellow-400"
-                                  : "text-emerald-400"
-                            }`}
-                          >
-                            {metric.value}
-                          </span>
-                          <span className="text-[7px] text-neutral-600">
-                            {metric.unit}
-                          </span>
-                        </div>
+                          key={idx}
+                          style={{ width: `${w * 1.5}px` }}
+                          className="h-full bg-black"
+                        ></div>
                       ),
                     )}
                   </div>
+                  <span className="text-[7px] font-mono text-black">
+                    284000 159340
+                  </span>
 
-                  {/* What's Inside section */}
-                  <div>
-                    <h4 className="text-[10px] uppercase font-bold tracking-widest text-neutral-500 mb-2">
-                      What's Inside?
-                    </h4>
-                    <div className="flex flex-col gap-1.5">
-                      {currentProduct.ingredients.map((item, idx) => (
-                        <div
-                          key={idx}
-                          className="bg-neutral-950/40 border border-neutral-900/80 rounded-lg p-2 flex items-start gap-2"
-                        >
-                          <span className="mt-0.5 shrink-0">
-                            {item.status === "success" && (
-                              <CheckCircle2
-                                className="text-emerald-400 fill-emerald-500/10"
-                                size={11}
-                              />
-                            )}
-                            {item.status === "warning" && (
-                              <AlertTriangle
-                                className="text-amber-400"
-                                size={11}
-                              />
-                            )}
-                            {item.status === "error" && (
-                              <XCircle
-                                className="text-red-500 fill-red-500/10"
-                                size={11}
-                              />
-                            )}
+                  {/* Scanning green line animation */}
+                  <div className="absolute inset-x-0 h-0.5 bg-emerald-500 shadow-[0_0_8px_#10b981] top-1/2 -translate-y-1/2 animate-laser"></div>
+                </div>
+              </div>
+
+              {/* 2. Front phone mockup (Interactive details) */}
+              <div className="relative z-20 w-60 sm:w-64 h-120 sm:h-125 rounded-[38px] border-8 border-neutral-800 bg-black shadow-2xl shadow-emerald-950/20 flex flex-col overflow-hidden select-none hover:border-neutral-750 transition-all duration-300">
+                {/* iPhone top sensor bar */}
+                <div className="absolute top-0 inset-x-0 h-5 bg-black flex justify-between px-6 items-center text-[9px] text-neutral-400 font-mono z-30">
+                  <span>9:41</span>
+                  <div className="w-16 h-3.5 bg-neutral-900 rounded-full border border-neutral-800/60 absolute left-1/2 -translate-x-1/2 top-1"></div>
+                  <div className="flex items-center gap-1">
+                    <Wifi size={8} />
+                    <Battery size={10} className="rotate-0" />
+                  </div>
+                </div>
+
+                {/* Internal phone app contents */}
+                <div className="flex-1 bg-[#090b0e] pt-6 flex flex-col text-left">
+                  {/* Navigation Bar inside App */}
+                  <div className="flex items-center justify-between px-4 py-2 border-b border-neutral-900/60 bg-[#090b0e]/90">
+                    <button className="text-emerald-400 hover:text-emerald-300">
+                      <ArrowLeft size={14} />
+                    </button>
+                    <span className="text-xs font-bold text-neutral-300 tracking-wide">
+                      Scan Result
+                    </span>
+                    <div className="w-3.5 h-3.5"></div>
+                  </div>
+
+                  {/* Scanned product info container */}
+                  <div className="flex-1 overflow-y-auto px-4 py-3 scrollbar-thin">
+                    {/* Product card */}
+                    <div className="relative rounded-2xl bg-neutral-900/70 border border-neutral-800/80 p-3 flex flex-col items-center text-center mb-3.5">
+                      {/* Glowing background behind image */}
+                      <div className="absolute top-2 w-14 h-14 bg-emerald-500/10 rounded-full filter blur-xl"></div>
+
+                      <div className="w-16 h-16 rounded-xl bg-neutral-950 border border-neutral-800 overflow-hidden flex items-center justify-center p-1.5 mb-2 relative z-10">
+                        <img
+                          src={currentProduct.image}
+                          alt={currentProduct.name}
+                          className="w-full h-full object-contain rounded"
+                        />
+                      </div>
+                      <h3 className="font-bold text-sm text-neutral-100 leading-tight">
+                        {currentProduct.name}
+                      </h3>
+                      <p className="text-[10px] text-neutral-500 mt-0.5">
+                        {currentProduct.category} • {currentProduct.brand}
+                      </p>
+
+                      {/* Unified health badge score */}
+                      <div className="flex items-center gap-2 mt-3.5 w-full bg-neutral-950/60 p-2 rounded-xl border border-neutral-900">
+                        {/* Radial score circle */}
+                        <div className="relative flex items-center justify-center w-9 h-9 rounded-full border border-neutral-800 bg-neutral-950">
+                          <span className="text-[10px] font-bold text-emerald-400 font-mono">
+                            {currentProduct.score}
                           </span>
-                          <div className="flex flex-col leading-tight">
-                            <span className="text-[9px] font-bold text-neutral-200">
-                              {item.name}
+                          <span className="absolute text-[6px] text-neutral-500 font-mono bottom-1">
+                            /100
+                          </span>
+                        </div>
+
+                        <div className="flex-1 text-left">
+                          <span
+                            className={`inline-block text-[9px] font-bold px-1.5 py-0.5 rounded-md border ${currentProduct.gradeColor}`}
+                          >
+                            {currentProduct.grade}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Nutrients Metrics Cards */}
+                    <div className="grid grid-cols-4 gap-1.5 mb-4">
+                      {Object.entries(currentProduct.metrics).map(
+                        ([key, metric]) => (
+                          <div
+                            key={key}
+                            className="bg-neutral-950/70 border border-neutral-900/80 rounded-xl p-1.5 flex flex-col items-center justify-center text-center"
+                          >
+                            <span className="text-[8px] text-neutral-500 uppercase tracking-wider">
+                              {key}
                             </span>
-                            <span className="text-[7px] text-neutral-500 mt-0.5">
-                              {item.text}
+                            <span
+                              className={`text-[10px] font-bold mt-0.5 ${
+                                metric.status === "high"
+                                  ? "text-amber-500"
+                                  : metric.status === "moderate"
+                                    ? "text-yellow-400"
+                                    : "text-emerald-400"
+                              }`}
+                            >
+                              {metric.value}
+                            </span>
+                            <span className="text-[7px] text-neutral-600">
+                              {metric.unit}
                             </span>
                           </div>
-                        </div>
-                      ))}
+                        ),
+                      )}
+                    </div>
+
+                    {/* What's Inside section */}
+                    <div>
+                      <h4 className="text-[10px] uppercase font-bold tracking-widest text-neutral-500 mb-2">
+                        What's Inside?
+                      </h4>
+                      <div className="flex flex-col gap-1.5">
+                        {currentProduct.ingredients.map((item, idx) => (
+                          <div
+                            key={idx}
+                            className="bg-neutral-950/40 border border-neutral-900/80 rounded-lg p-2 flex items-start gap-2"
+                          >
+                            <span className="mt-0.5 shrink-0">
+                              {item.status === "success" && (
+                                <CheckCircle2
+                                  className="text-emerald-400 fill-emerald-500/10"
+                                  size={11}
+                                />
+                              )}
+                              {item.status === "warning" && (
+                                <AlertTriangle
+                                  className="text-amber-400"
+                                  size={11}
+                                />
+                              )}
+                              {item.status === "error" && (
+                                <XCircle
+                                  className="text-red-500 fill-red-500/10"
+                                  size={11}
+                                />
+                              )}
+                            </span>
+                            <div className="flex flex-col leading-tight">
+                              <span className="text-[9px] font-bold text-neutral-200">
+                                {item.name}
+                              </span>
+                              <span className="text-[7px] text-neutral-500 mt-0.5">
+                                {item.text}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* 3. Floating steps on the right side pointing to phone */}
-            <div className="absolute right-[-10%] md:right-[5%] lg:right-[-4%] xl:right-[-8%] top-[10%] flex flex-col gap-4 z-30 max-w-38.75 sm:max-w-45">
+            {/* 3. Steps panel — shown below phone on lg, side by side on xl */}
+            <div className="flex flex-row xl:flex-col gap-3 w-full xl:w-auto xl:max-w-44 justify-center">
               {/* Step 1: Scan */}
-              <div className="group bg-[#0d121c]/90 border border-neutral-800/80 p-3 rounded-xl flex gap-3 shadow-lg backdrop-blur-md hover:border-emerald-500/40 transition-all duration-300">
+              <div className="group bg-[#0d121c]/90 border border-neutral-800/80 p-3 rounded-xl flex gap-3 shadow-lg backdrop-blur-md hover:border-emerald-500/40 transition-all duration-300 flex-1 xl:flex-none">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-950/50 border border-emerald-500/20 text-emerald-400 shrink-0 group-hover:scale-105 transition-transform">
                   <Scan size={14} />
                 </div>
-                <div className="text-left flex flex-col leading-tight justify-center">
+                <div className="text-left flex flex-col leading-tight justify-center min-w-0">
                   <span className="text-xs font-bold text-neutral-200">
                     Scan
                   </span>
-                  <span className="text-[9px] text-neutral-400 mt-0.5">
+                  <span className="text-[9px] text-neutral-400 mt-0.5 hidden sm:block">
                     Scan any barcode in seconds
                   </span>
                 </div>
               </div>
 
               {/* Step 2: Analyze */}
-              <div className="group bg-[#0d121c]/90 border border-neutral-800/80 p-3 rounded-xl flex gap-3 shadow-lg backdrop-blur-md hover:border-emerald-500/40 transition-all duration-300">
+              <div className="group bg-[#0d121c]/90 border border-neutral-800/80 p-3 rounded-xl flex gap-3 shadow-lg backdrop-blur-md hover:border-emerald-500/40 transition-all duration-300 flex-1 xl:flex-none">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-950/50 border border-emerald-500/20 text-emerald-400 shrink-0 group-hover:scale-105 transition-transform">
                   <Activity size={14} />
                 </div>
-                <div className="text-left flex flex-col leading-tight justify-center">
+                <div className="text-left flex flex-col leading-tight justify-center min-w-0">
                   <span className="text-xs font-bold text-neutral-200">
                     Analyze
                   </span>
-                  <span className="text-[9px] text-neutral-400 mt-0.5">
+                  <span className="text-[9px] text-neutral-400 mt-0.5 hidden sm:block">
                     Get nutrition & health insights
                   </span>
                 </div>
               </div>
 
               {/* Step 3: Choose Better */}
-              <div className="group bg-[#0d121c]/90 border border-neutral-800/80 p-3 rounded-xl flex gap-3 shadow-lg backdrop-blur-md hover:border-emerald-500/40 transition-all duration-300">
+              <div className="group bg-[#0d121c]/90 border border-neutral-800/80 p-3 rounded-xl flex gap-3 shadow-lg backdrop-blur-md hover:border-emerald-500/40 transition-all duration-300 flex-1 xl:flex-none">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-950/50 border border-emerald-500/20 text-emerald-400 shrink-0 group-hover:scale-105 transition-transform">
                   <Heart size={14} />
                 </div>
-                <div className="text-left flex flex-col leading-tight justify-center">
+                <div className="text-left flex flex-col leading-tight justify-center min-w-0">
                   <span className="text-xs font-bold text-neutral-200">
                     Choose Better
                   </span>
-                  <span className="text-[9px] text-neutral-400 mt-0.5">
+                  <span className="text-[9px] text-neutral-400 mt-0.5 hidden sm:block">
                     Make healthier choices daily
                   </span>
                 </div>

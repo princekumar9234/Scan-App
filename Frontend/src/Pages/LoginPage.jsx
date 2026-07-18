@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, LogIn, Mail, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import ClientServer from "./ClientServer";
 import toast from "react-hot-toast";
@@ -9,7 +9,6 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
@@ -41,62 +40,98 @@ const LoginPage = () => {
   };
 
   return (
-    <div>
+    <div className=" bg-[#0F172A] flex flex-col">
       <Navbar />
-      <form
-        onSubmit={(e) => {
-          handleForm(e);
-        }}
-        className="flex flex-col justify-center items-center  mt-22 "
-      >
-        <div className="flex flex-col gap-2 shadow-[0_8px_20px_rgba(0,0,0,0.6)] p-7 rounded-xl border-black bg-[#1c1c1c]">
-          <h2 className="text-center text-lg font-bold mb-4">Welcome Back </h2>
-          <h4 className="text-sm text-gray-300 opacity-65">Email Address</h4>
-          <input
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-            value={email}
-            type="text"
-            name="email"
-            placeholder="Enter your Email"
-            className="p-3  bg-black focus:border opacity-65 outline-none focus:shadow-[0_8px_20px_rgba(2,180,120,0.2)] focus:border-emerald-400 rounded-xl text-sm "
-          />
-          <h4 className="mt-2 text-sm text-gray-300 opacity-65">Psssword</h4>
-          <input
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-            value={password}
-            name="pasword "
-            type={showPassword ? "text" : "password"}
-            placeholder="Enter your password"
-            className="p-3  bg-black text-sm opacity-65  rounded-xl focus:border  focus:shadow-[0_8px_20px_rgba(2,180,120,0.2)] outline-none focus:border-emerald-400 "
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)} // click handler to toggle state
-            className="absolute bottom-105 right-27 md:right-[38%] md:bottom-67 focus:shadow-[0_8px_20px_rgba(2,180,120,0.2)] text-emerald-600 hover:text-emerald-400 focus:outline-none cursor-pointer flex items-center justify-center"
-          >
-            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-          </button>
+      <div className="flex-1 flex items-center justify-center px-4 py-4">
+        <div className="w-full max-w-md">
+          {/* Card */}
+          <div className="bg-[#1c1c1c] border border-neutral-800 rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.7)] p-8">
+            {/* Header */}
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-emerald-950/40 border border-emerald-500/20 mb-4">
+                <LogIn size={24} className="text-emerald-400" />
+              </div>
+              <h2 className="text-2xl font-extrabold text-white">
+                Welcome Back
+              </h2>
+              <p className="text-sm text-neutral-500 mt-1">
+                Sign in to your account
+              </p>
+            </div>
 
-          <button className="p-2   rounded bg-emerald-400 transition-all shadow-[0_8px_20px_rgba(16,185,129,0.45)] hover:shadow-[0_10px_25px_rgba(16,185,129,0.6)]  text-black mt-4 font-bold cursor-pointer ">
-            Log in
-          </button>
-          <div className="mt-3  md:px-12 gap-2 flex opacity-80 justify-center">
-            Don't have an account ?
-            <button
-              className="text-red-500 cursor-pointer underline font-bold"
-              onClick={() => {
-                navigate("/register");
-              }}
-            >
-              Register now
-            </button>
+            <form onSubmit={handleForm} className="flex flex-col gap-5">
+              {/* Email */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-semibold text-neutral-400">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <Mail
+                    size={16}
+                    className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500"
+                  />
+                  <input
+                    onChange={(e) => setEmail(e.target.value)}
+                    value={email}
+                    type="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    className="w-full pl-10 pr-4 py-3 bg-black border border-neutral-800 focus:border-emerald-400 outline-none focus:shadow-[0_0_20px_rgba(16,185,129,0.15)] rounded-xl text-sm text-gray-200 transition"
+                  />
+                </div>
+              </div>
+
+              {/* Password */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-semibold text-neutral-400">
+                  Password
+                </label>
+                <div className="relative">
+                  <Lock
+                    size={16}
+                    className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500"
+                  />
+                  <input
+                    onChange={(e) => setPassword(e.target.value)}
+                    value={password}
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter your password"
+                    className="w-full pl-10 pr-12 py-3 bg-black border border-neutral-800 focus:border-emerald-400 outline-none focus:shadow-[0_0_20px_rgba(16,185,129,0.15)] rounded-xl text-sm text-gray-200 transition"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-emerald-400 transition cursor-pointer"
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Submit */}
+              <button
+                type="submit"
+                className="w-full mt-2 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold transition-all shadow-[0_8px_20px_rgba(16,185,129,0.35)] hover:shadow-[0_10px_30px_rgba(16,185,129,0.5)] flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <LogIn size={18} />
+                Log In
+              </button>
+            </form>
+
+            {/* Footer */}
+            <div className="mt-6 text-center text-sm text-neutral-500">
+              Don't have an account?{" "}
+              <button
+                onClick={() => navigate("/register")}
+                className="text-emerald-400 hover:text-emerald-300 font-bold underline cursor-pointer transition"
+              >
+                Register now
+              </button>
+            </div>
           </div>
         </div>
-      </form>
+      </div>
     </div>
   );
 };

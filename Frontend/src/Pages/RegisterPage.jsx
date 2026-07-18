@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Eye, EyeOff } from "lucide-react";
-import axios from "axios";
+import { Eye, EyeOff, UserPlus, User, Mail, Lock } from "lucide-react";
 import ClientServer from "./ClientServer";
 import Navbar from "./Navbar";
 
@@ -37,7 +36,6 @@ const RegisterPage = () => {
         if (error.response.status === 409) {
           alert(error.response.data.message);
         } else if (error.response.status === 400) {
-          // console.log(error.response.data.error.map((e) => e.msg))
           alert(error.response.data.error.map((e) => e.msg));
         } else {
           console.log(error);
@@ -45,95 +43,149 @@ const RegisterPage = () => {
         }
       });
   };
+
   return (
-    <div>
+    <div className=" bg-[#0F172A] flex flex-col">
       <Navbar />
+      <div className="flex-1 flex items-center justify-center px-4 py-4">
+        <div className="w-full max-w-md">
+          {/* Card */}
+          <div className="bg-[#1c1c1c] border border-neutral-800 rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.7)] p-8">
+            {/* Header */}
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-emerald-950/40 border border-emerald-500/20 mb-4">
+                <UserPlus size={24} className="text-emerald-400" />
+              </div>
+              <h2 className="text-2xl font-extrabold text-white">
+                Create Account
+              </h2>
+              <p className="text-sm text-neutral-500 mt-1">
+                Start scanning smarter today
+              </p>
+            </div>
 
-      <form
-        onSubmit={(e) => {
-          handleForm(e);
-        }}
-        className="mt-2 ml-6 md:ml-[35%] w-fit m-4 rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.6)] bg-[#1c1c1c]"
-      >
-        <div className="  p-7 pb-3 gap-1 mt-6  flex flex-col">
-          <h4 className="mt-2 opacity-90 text-center mb-3 text-lg font-bold">
-            Create a new Account
-          </h4>
-          <h4 className="mt-2 opacity-60 text-sm font-bold">Your Name</h4>
-          <input
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
-            value={username}
-            type="text"
-            placeholder="Enter your Full name"
-            className="p-3 bg-black rounded-xl text-sm focus:shadow-[0_8px_20px_rgba(2,180,120,0.2)] focus:border-emerald-300 focus:border opacity-60 outline-none  "
-          />
-          <h4 className="mt-2 opacity-60 text-sm font-bold">Your Email</h4>
-          <input
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-            value={email}
-            type="email"
-            placeholder="Enter your email "
-            className="p-3 bg-black rounded-xl text-sm focus:shadow-[0_8px_20px_rgba(2,180,120,0.2)] focus:border-emerald-300 focus:border opacity-60 outline-none  "
-          />
-          <h4 className="mt-2 opacity-60 text-sm font-bold">Password</h4>
-          <input
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-            value={password}
-            type={showPassword ? "text " : "password"}
-            placeholder="Enter your Password"
-            className=" p-3 bg-black rounded-xl text-sm focus:shadow-[0_8px_20px_rgba(2,180,120,0.2)] focus:border-emerald-300 focus:border opacity-60 outline-none  "
-          />
+            <form onSubmit={handleForm} className="flex flex-col gap-5">
+              {/* Name */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-semibold text-neutral-400">
+                  Your Name
+                </label>
+                <div className="relative">
+                  <User
+                    size={16}
+                    className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500"
+                  />
+                  <input
+                    onChange={(e) => setName(e.target.value)}
+                    value={username}
+                    type="text"
+                    placeholder="Enter your full name"
+                    className="w-full pl-10 pr-4 py-3 bg-black border border-neutral-800 focus:border-emerald-400 outline-none focus:shadow-[0_0_20px_rgba(16,185,129,0.15)] rounded-xl text-sm text-gray-200 transition"
+                  />
+                </div>
+              </div>
 
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)} // click handler to toggle state
-            className="absolute bottom-102 right-21 md:right-[38%]  md:bottom-64 text-emerald-600 hover:text-emerald-400 focus:outline-none cursor-pointer flex items-center justify-center"
-          >
-            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-          </button>
-          <h4 className="mt-3 opacity-60 text-sm font-bold">
-            Conform Password
-          </h4>
-          <input
-            onChange={(e) => {
-              setConformPassword(e.target.value);
-            }}
-            value={conformPassword}
-            type={showConformPassword ? "text" : "password"}
-            placeholder="Enter your Password"
-            className="p-3 bg-black rounded-xl  text-sm focus:border-emerald-300 focus:shadow-[0_8px_20px_rgba(2,180,120,0.2)] focus:border opacity-60 outline-none  "
-          />
+              {/* Email */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-semibold text-neutral-400">
+                  Your Email
+                </label>
+                <div className="relative">
+                  <Mail
+                    size={16}
+                    className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500"
+                  />
+                  <input
+                    onChange={(e) => setEmail(e.target.value)}
+                    value={email}
+                    type="email"
+                    placeholder="Enter your email"
+                    className="w-full pl-10 pr-4 py-3 bg-black border border-neutral-800 focus:border-emerald-400 outline-none focus:shadow-[0_0_20px_rgba(16,185,129,0.15)] rounded-xl text-sm text-gray-200 transition"
+                  />
+                </div>
+              </div>
 
-          <button
-            type="button"
-            onClick={() => setShowConformPassword(!showConformPassword)} // click handler to toggle state
-            className="absolute bottom-81 right-21 md:right-[38%] md:bottom-43 focus:shadow-[0_8px_20px_rgba(2,180,120,0.2)] text-emerald-500 focus:outline-none cursor-pointer flex items-center justify-center"
-          >
-            {showConformPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-          </button>
+              {/* Password */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-semibold text-neutral-400">
+                  Password
+                </label>
+                <div className="relative">
+                  <Lock
+                    size={16}
+                    className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500"
+                  />
+                  <input
+                    onChange={(e) => setPassword(e.target.value)}
+                    value={password}
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter your password"
+                    className="w-full pl-10 pr-12 py-3 bg-black border border-neutral-800 focus:border-emerald-400 outline-none focus:shadow-[0_0_20px_rgba(16,185,129,0.15)] rounded-xl text-sm text-gray-200 transition"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-emerald-400 transition cursor-pointer"
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+              </div>
 
-          <button className="px-29 md:px-33 mt-6 py-3  bg-emerald-400 outline-none rounded focus:shadow-[0_8px_20px_rgba(2,180,120,0.2)] text-black font-bold text-sm shadow-[0_8px_20px_rgba(16,185,129,0.45)] hover:shadow-[0_10px_25px_rgba(16,185,129,0.6)] ">
-            Create Account
-          </button>
+              {/* Confirm Password */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-semibold text-neutral-400">
+                  Confirm Password
+                </label>
+                <div className="relative">
+                  <Lock
+                    size={16}
+                    className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500"
+                  />
+                  <input
+                    onChange={(e) => setConformPassword(e.target.value)}
+                    value={conformPassword}
+                    type={showConformPassword ? "text" : "password"}
+                    placeholder="Re-enter your password"
+                    className="w-full pl-10 pr-12 py-3 bg-black border border-neutral-800 focus:border-emerald-400 outline-none focus:shadow-[0_0_20px_rgba(16,185,129,0.15)] rounded-xl text-sm text-gray-200 transition"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConformPassword(!showConformPassword)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-emerald-400 transition cursor-pointer"
+                  >
+                    {showConformPassword ? (
+                      <EyeOff size={18} />
+                    ) : (
+                      <Eye size={18} />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Submit */}
+              <button
+                type="submit"
+                className="w-full mt-2 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold transition-all shadow-[0_8px_20px_rgba(16,185,129,0.35)] hover:shadow-[0_10px_30px_rgba(16,185,129,0.5)] flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <UserPlus size={18} />
+                Create Account
+              </button>
+            </form>
+
+            {/* Footer */}
+            <div className="mt-6 text-center text-sm text-neutral-500">
+              Already have an account?{" "}
+              <button
+                onClick={() => navigate("/login")}
+                className="text-emerald-400 hover:text-emerald-300 font-bold underline cursor-pointer transition"
+              >
+                Log in
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="flex gap-2  justify-center pb-4 text-lg">
-          You have an account ?
-          <button
-            onClick={() => {
-              navigate("/login");
-            }}
-            className="underline text-red-500"
-          >
-            Log in
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
   );
 };
