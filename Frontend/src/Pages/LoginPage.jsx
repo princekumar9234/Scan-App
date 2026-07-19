@@ -31,9 +31,12 @@ const LoginPage = () => {
         navigate("/homepage");
       })
       .catch((error) => {
-        console.log(error.response);
-        console.log(error.response.data.message);
-        alert(error.response.data.message);
+        console.log(error);
+        // error.response undefined hoga jab network/CORS error ho
+        const message =
+          error?.response?.data?.message ||
+          "Something went wrong. Please try again.";
+        alert(message);
         setEmail("");
         setPassword("");
       });

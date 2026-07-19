@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Html5QrcodeScanner, Html5QrcodeSupportedFormats } from "html5-qrcode";
+import { Html5QrcodeScanner, Html5Qrcode, Html5QrcodeSupportedFormats } from "html5-qrcode";
 import { BrowserMultiFormatReader } from "@zxing/browser";
+import { BarcodeFormat, DecodeHintType } from "@zxing/library";
 import {
   Scan,
   Heart,
@@ -50,42 +51,186 @@ const ScanPage = () => {
     };
   }, []);
 
+  /**
+   * Attempts to decode a barcode from an image file using multiple strategies:
+   *  - First pre-processes/down-scales the image (max 800px) which drastically
+   *    improves decode rates for high-res smartphone camera photos.
+   *  - Runs both resized and original variations through ZXing (with hints),
+   *    ZXing (no hints), and Html5Qrcode engines.
+   */
   const handleFileUpload = async (e) => {
     const file = e.target.files?.[0];
+    if (e.target) e.target.value = ""; // Reset file input
     if (!file) return;
 
     setIsLoading(true);
     setErrorMsg("");
     setProduct(null);
 
-    const reader = new FileReader();
-    reader.onload = async (event) => {
-      const url = event.target.result;
-      try {
-        const codeReader = new BrowserMultiFormatReader();
-        const result = await codeReader.decodeFromImageUrl(url);
+    // ── Helper: Image Preprocessor/Resizer ──────────────────────────────────
+    const preprocessImage = (imageFile, maxDim = 800) => {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          let width = img.width;
+          let height = img.height;
+          
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+          
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const resizedUrl = URL.createObjectURL(blob);
+              resolve({
+                url: resizedUrl,
+                file: new File([blob], imageFile.name, { type: imageFile.type })
+              });
+            } else {
+              resolve({ url: URL.createObjectURL(imageFile), file: imageFile });
+            }
+          }, imageFile.type);
+        };
+        img.onerror = () => {
+          resolve({ url: URL.createObjectURL(imageFile), file: imageFile });
+        };
+        img.src = URL.createObjectURL(imageFile);
+      });
+    };
 
-        if (result && result.text) {
-          setBarcode(result.text);
-          toast.success(`Barcode detected: ${result.text}`);
-          handleSearch(result.text);
-        } else {
-          toast.error("No barcode detected in the image.");
-          setErrorMsg("Could not read a barcode. Try a clearer image.");
+    // ── Helper: decode via ZXing with Console Suppression ───────────────────
+    const tryZxing = (imageUrl, hints) =>
+      new Promise((resolve) => {
+        const originalWarn = console.warn;
+        const originalError = console.error;
+        console.warn = () => {};
+        console.error = () => {};
+
+        const codeReader = hints
+          ? new BrowserMultiFormatReader(hints)
+          : new BrowserMultiFormatReader();
+        codeReader
+          .decodeFromImageUrl(imageUrl)
+          .then((r) => {
+            console.warn = originalWarn;
+            console.error = originalError;
+            resolve(r?.text || null);
+          })
+          .catch(() => {
+            console.warn = originalWarn;
+            console.error = originalError;
+            resolve(null);
+          });
+      });
+
+    // ── Helper: decode via Html5Qrcode ──────────────────────────────────────
+    const tryHtml5Qrcode = (imageFile) =>
+      new Promise((resolve) => {
+        const tempId = "__h5qr_temp__";
+        let container = document.getElementById(tempId);
+        if (!container) {
+          container = document.createElement("div");
+          container.id = tempId;
+          container.style.display = "none";
+          document.body.appendChild(container);
         }
-      } catch (err) {
-        console.error("ZXing barcode scanning error:", err);
-        toast.error(
-          "Could not scan barcode from this file. Try entering manually.",
-        );
+        const scanner = new Html5Qrcode(tempId);
+        scanner
+          .scanFile(imageFile, false)
+          .then((text) => {
+            resolve(text || null);
+          })
+          .catch(() => {
+            resolve(null);
+          });
+      });
+
+    try {
+      // 1. Preprocess/Resize image
+      const resized = await preprocessImage(file, 800);
+      const originalUrl = URL.createObjectURL(file);
+      
+      let detectedCode = null;
+
+      // Create format hints map for ZXing
+      const hints = new Map();
+      if (BarcodeFormat && DecodeHintType) {
+        hints.set(DecodeHintType.POSSIBLE_FORMATS, [
+          BarcodeFormat.EAN_13,
+          BarcodeFormat.EAN_8,
+          BarcodeFormat.UPC_A,
+          BarcodeFormat.UPC_E,
+          BarcodeFormat.CODE_128,
+          BarcodeFormat.CODE_39,
+          BarcodeFormat.ITF,
+          BarcodeFormat.DATA_MATRIX,
+          BarcodeFormat.QR_CODE,
+        ]);
+        hints.set(DecodeHintType.TRY_HARDER, true);
+      }
+
+      // ── Strategy A: Decodes on resized image (extremely fast & high success on smart-photos) ──
+      // Pass 1: ZXing hints (resized)
+      detectedCode = await tryZxing(resized.url, hints);
+
+      // Pass 2: ZXing no-hints (resized)
+      if (!detectedCode) {
+        detectedCode = await tryZxing(resized.url, null);
+      }
+
+      // Pass 3: Html5Qrcode (resized file)
+      if (!detectedCode) {
+        detectedCode = await tryHtml5Qrcode(resized.file);
+      }
+
+      // ── Strategy B: Fallback to original image (if resizing failed or code was very small) ──
+      // Pass 4: ZXing hints (original)
+      if (!detectedCode) {
+        detectedCode = await tryZxing(originalUrl, hints);
+      }
+
+      // Pass 5: Html5Qrcode (original file)
+      if (!detectedCode) {
+        detectedCode = await tryHtml5Qrcode(file);
+      }
+
+      // Clean up object URLs
+      URL.revokeObjectURL(originalUrl);
+      if (resized.url !== originalUrl) {
+        URL.revokeObjectURL(resized.url);
+      }
+
+      if (detectedCode) {
+        setBarcode(detectedCode);
+        toast.success(`Barcode detected: ${detectedCode}`);
+        handleSearch(detectedCode);
+      } else {
+        toast.error("No barcode detected. Try a clearer or closer photo.");
         setErrorMsg(
-          "Failed to decode barcode from file. Try entering manually.",
+          "Could not read a barcode from this image. Make sure the barcode is clearly visible and well-lit, then try again — or enter the barcode number manually.",
         );
-      } finally {
         setIsLoading(false);
       }
-    };
-    reader.readAsDataURL(file);
+    } catch (err) {
+      console.error("Barcode scan error:", err);
+      toast.error("Scan failed. Try entering the barcode manually.");
+      setErrorMsg(
+        "Failed to decode barcode from file. Try entering manually.",
+      );
+      setIsLoading(false);
+    }
   };
 
   const triggerFileSelect = () => {

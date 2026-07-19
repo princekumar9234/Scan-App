@@ -33,13 +33,13 @@ const RegisterPage = () => {
         navigate("/login");
       })
       .catch((error) => {
-        if (error.response.status === 409) {
+        console.log(error);
+        if (error?.response?.status === 409) {
           alert(error.response.data.message);
-        } else if (error.response.status === 400) {
+        } else if (error?.response?.status === 400) {
           alert(error.response.data.error.map((e) => e.msg));
         } else {
-          console.log(error);
-          alert("Please try again Check Your internet Connections !");
+          alert("Something went wrong. Please check your internet connection!");
         }
       });
   };
