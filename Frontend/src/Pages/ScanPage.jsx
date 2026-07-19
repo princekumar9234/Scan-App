@@ -28,6 +28,7 @@ const ScanPage = () => {
   const [isFavoriting, setIsFavoriting] = useState(false);
   const [product, setProduct] = useState(null);
   const [errorMsg, setErrorMsg] = useState("");
+  const [notFound, setNotFound] = useState(false);
   const [cameraActive, setCameraActive] = useState(false);
 
   const scannerRef = useRef(null);
@@ -296,6 +297,7 @@ const ScanPage = () => {
   const handleSearch = async (codeToSearch) => {
     setIsLoading(true);
     setErrorMsg("");
+    setNotFound(false);
     setProduct(null);
 
     try {
@@ -306,15 +308,22 @@ const ScanPage = () => {
         setProduct(res.data.data);
         toast.success(res.data.message || "Product analyzed!");
       } else {
-        setErrorMsg(res.data.message || "Product not found.");
+        // Non-throwing 4xx responses (unlikely with axios, but safe)
+        setNotFound(true);
       }
     } catch (err) {
       console.error(err);
-      const msg =
-        err.response?.data?.message ||
-        "Failed to retrieve product details. Try again.";
-      setErrorMsg(msg);
-      toast.error(msg);
+      const status = err.response?.status;
+      if (status === 404) {
+        // Product not found in database
+        setNotFound(true);
+      } else {
+        const msg =
+          err.response?.data?.message ||
+          "Something went wrong. Please try again.";
+        setErrorMsg(msg);
+        toast.error(msg);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -442,51 +451,156 @@ const ScanPage = () => {
           )}
         </div>
 
-        {/* Loading Skeletons */}
+        {/* ── Loading Skeleton ──────────────────────────────────────────── */}
         {isLoading && (
-          <div className="space-y-6 animate-pulse">
-            <div className="bg-[#1c1c1c] h-48 rounded-2xl border border-neutral-800"></div>
+          <div className="space-y-6">
+            {/* Shimmer header */}
+            <div className="relative bg-[#1c1c1c] border border-neutral-800 rounded-2xl p-6 overflow-hidden flex gap-6 items-center">
+              <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.4s_infinite] bg-gradient-to-r from-transparent via-white/5 to-transparent"></div>
+              <div className="w-32 h-32 rounded-xl bg-neutral-800 shrink-0"></div>
+              <div className="grow space-y-3">
+                <div className="h-3 bg-neutral-800 rounded-full w-24"></div>
+                <div className="h-6 bg-neutral-800 rounded-full w-64"></div>
+                <div className="h-3 bg-neutral-800 rounded-full w-40"></div>
+              </div>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-[#1c1c1c] h-64 rounded-2xl border border-neutral-800 md:col-span-2"></div>
-              <div className="bg-[#1c1c1c] h-64 rounded-2xl border border-neutral-800"></div>
+              <div className="relative bg-[#1c1c1c] border border-neutral-800 rounded-2xl h-52 overflow-hidden">
+                <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.4s_0.1s_infinite] bg-gradient-to-r from-transparent via-white/5 to-transparent"></div>
+              </div>
+              <div className="relative bg-[#1c1c1c] border border-neutral-800 rounded-2xl h-52 overflow-hidden md:col-span-2">
+                <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.4s_0.2s_infinite] bg-gradient-to-r from-transparent via-white/5 to-transparent"></div>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="relative bg-[#1c1c1c] border border-neutral-800 rounded-2xl h-48 overflow-hidden">
+                <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.4s_0.3s_infinite] bg-gradient-to-r from-transparent via-white/5 to-transparent"></div>
+              </div>
+              <div className="relative bg-[#1c1c1c] border border-neutral-800 rounded-2xl h-48 overflow-hidden">
+                <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.4s_0.4s_infinite] bg-gradient-to-r from-transparent via-white/5 to-transparent"></div>
+              </div>
             </div>
           </div>
         )}
 
-        {/* Error States */}
+        {/* ── Product Not Found ─────────────────────────────────────────── */}
+        {notFound && !isLoading && (
+          <div className="relative bg-[#1c1c1c] border border-orange-500/25 rounded-2xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.6)]">
+            {/* Top accent */}
+            <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-orange-500/0 via-orange-400 to-orange-500/0"></div>
+
+            <div className="p-10 flex flex-col items-center text-center">
+              {/* Icon */}
+              <div className="relative mb-6">
+                <div className="w-20 h-20 rounded-full bg-orange-500/10 border border-orange-500/20 flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-orange-400">
+                    <path d="M3 7v4a1 1 0 001 1h3" /><path d="M7 7V5" /><path d="M16 11V7" /><path d="M16 11h-2.5" />
+                    <path d="M20 7v4a1 1 0 01-1 1h-1" />
+                    <rect x="1" y="3" width="22" height="4" rx="1" />
+                    <path d="M9 17H5a2 2 0 00-2 2v2" />
+                    <path d="M15 21l2-2 2 2" />
+                    <path d="M17 21v-8" />
+                  </svg>
+                </div>
+                {/* Ping ring */}
+                <span className="absolute inset-0 rounded-full border border-orange-400/30 animate-ping opacity-40"></span>
+              </div>
+
+              <h3 className="text-xl font-extrabold text-white mb-2">Product Not Found</h3>
+              <p className="text-sm text-neutral-400 max-w-sm leading-relaxed mb-1">
+                The barcode you scanned is not in our food database.
+              </p>
+              <p className="text-xs text-neutral-600 max-w-xs">
+                Try scanning another product or enter the barcode manually.
+              </p>
+
+              {/* Tips */}
+              <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-lg">
+                {[
+                  { icon: "🔢", tip: "Check barcode digits" },
+                  { icon: "💡", tip: "Try a different angle" },
+                  { icon: "🌍", tip: "Product may not be listed yet" },
+                ].map((t, i) => (
+                  <div key={i} className="bg-black/40 border border-neutral-800 rounded-xl p-3 flex flex-col items-center gap-1">
+                    <span className="text-xl">{t.icon}</span>
+                    <span className="text-xs text-neutral-400 text-center">{t.tip}</span>
+                  </div>
+                ))}
+              </div>
+
+              <button
+                onClick={() => { setNotFound(false); setBarcode(""); }}
+                className="mt-6 px-6 py-2.5 bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/30 text-orange-300 hover:text-orange-200 text-sm font-semibold rounded-xl transition cursor-pointer"
+              >
+                Try Again
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ── Server / Network Error ────────────────────────────────────── */}
         {errorMsg && !isLoading && (
-          <div className="bg-red-950/20 border border-red-500/30 p-6 rounded-2xl text-center shadow-[0_8px_20px_rgba(0,0,0,0.6)]">
-            <AlertTriangle className="text-red-500 mx-auto mb-3" size={40} />
-            <h3 className="font-bold text-lg text-neutral-200">
-              Analysis Failed
-            </h3>
-            <p className="text-sm text-neutral-400 mt-1 max-w-md mx-auto">
-              {errorMsg}
-            </p>
-            <button
-              onClick={() => setErrorMsg("")}
-              className="mt-4 px-4 py-2 bg-neutral-900 border border-neutral-800 text-xs rounded-xl hover:bg-neutral-850 cursor-pointer"
-            >
-              Clear Error
-            </button>
+          <div className="relative bg-[#1c1c1c] border border-red-500/25 rounded-2xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.6)]">
+            {/* Top accent */}
+            <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-red-500/0 via-red-400 to-red-500/0"></div>
+
+            <div className="p-8 flex flex-col sm:flex-row items-center gap-6">
+              {/* Icon */}
+              <div className="shrink-0 w-16 h-16 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center">
+                <AlertTriangle className="text-red-400" size={28} />
+              </div>
+
+              <div className="grow text-center sm:text-left">
+                <h3 className="font-extrabold text-lg text-white">Request Failed</h3>
+                <p className="text-sm text-neutral-400 mt-1 leading-relaxed">{errorMsg}</p>
+              </div>
+
+              <button
+                onClick={() => setErrorMsg("")}
+                className="shrink-0 px-5 py-2.5 bg-neutral-900 hover:bg-neutral-800 border border-neutral-700 text-neutral-300 hover:text-white text-sm font-semibold rounded-xl transition cursor-pointer"
+              >
+                Dismiss
+              </button>
+            </div>
           </div>
         )}
 
-        {/* Empty State */}
-        {!product && !isLoading && !errorMsg && (
-          <div className="bg-[#1c1c1c]/50 border border-neutral-800 border-dashed p-12 rounded-2xl text-center max-w-lg mx-auto">
-            <Scan className="text-neutral-600 mx-auto mb-4" size={48} />
-            <h3 className="font-bold text-lg text-neutral-300">
-              Ready to Scan
-            </h3>
-            <p className="text-sm text-neutral-500 mt-1 max-w-xs mx-auto">
-              Enter a barcode number or activate the camera scanner to fetch
-              ingredients and health metrics.
-            </p>
+        {/* ── Empty / Ready State ───────────────────────────────────────── */}
+        {!product && !isLoading && !errorMsg && !notFound && (
+          <div className="relative bg-[#1c1c1c]/60 border border-dashed border-neutral-800 rounded-2xl overflow-hidden">
+            <div className="p-14 flex flex-col items-center text-center">
+              {/* Animated icon */}
+              <div className="relative mb-6">
+                <div className="w-20 h-20 rounded-full bg-emerald-500/8 border border-emerald-500/20 flex items-center justify-center">
+                  <Scan className="text-emerald-500/60" size={36} />
+                </div>
+                <div className="absolute inset-0 rounded-full border border-emerald-500/20 animate-pulse"></div>
+              </div>
+
+              <h3 className="text-xl font-extrabold text-neutral-200 mb-2">Ready to Scan</h3>
+              <p className="text-sm text-neutral-500 max-w-sm leading-relaxed">
+                Enter a barcode number, upload an image, or use the live camera
+                scanner to instantly fetch ingredients &amp; health analysis.
+              </p>
+
+              {/* Feature pills */}
+              <div className="mt-6 flex flex-wrap justify-center gap-2">
+                {[
+                  { icon: "🔍", label: "Manual Barcode" },
+                  { icon: "📷", label: "Live Camera" },
+                  { icon: "🖼️", label: "Upload Image" },
+                  { icon: "⚡", label: "Instant Analysis" },
+                ].map((f, i) => (
+                  <span key={i} className="text-xs px-3 py-1.5 rounded-full bg-neutral-800/60 border border-neutral-700 text-neutral-400 flex items-center gap-1.5">
+                    <span>{f.icon}</span>{f.label}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
         )}
 
-        {/* Product Details Section (Unified View) */}
+        {/* Product Details Section */}
         {product && !isLoading && (
           <div className="space-y-6">
             {/* 1. Main Header Card */}

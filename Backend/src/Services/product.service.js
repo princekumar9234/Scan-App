@@ -1,6 +1,5 @@
 const { analyzeNutrition } = require("./health.service");
 
-
 async function getProductByBarcode(barcode) {
   try {
     const apiBaseUrl =
@@ -21,7 +20,7 @@ async function getProductByBarcode(barcode) {
     const p = result.product;
     const nutriments = p.nutriments || {};
 
-    // Standard Open Food Facts returns sodium in grams, let's convert to mg for analysis
+    // Standard Open Food Facts returns sodium in grams, convert to mg for analysis
     const sodiumGrams = parseFloat(nutriments.sodium_100g || 0);
     const sodiumMg = Math.round(sodiumGrams * 1000);
 
@@ -48,7 +47,6 @@ async function getProductByBarcode(barcode) {
     // Rule based analysis
     const analysis = analyzeNutrition(nutritionData);
 
-    // Clean JSON return format
     return {
       barcode: barcode,
       productName: p.product_name || "Unknown Product",

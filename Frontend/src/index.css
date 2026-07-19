@@ -24,6 +24,11 @@ body {
   animation: scan 2s infinite ease-in-out;
 }
 
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
 .scrollbar-thin::-webkit-scrollbar {
   width: 3px;
 }

@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 /**
  * ScanHistory Schema
  * Stores every successful product scan linked to a user.
+ * Supports food, petfood, and general products.
  */
 const scanHistorySchema = new mongoose.Schema(
   {
@@ -14,6 +15,11 @@ const scanHistorySchema = new mongoose.Schema(
     barcode: {
       type: String,
       required: true,
+    },
+    productType: {
+      type: String,
+      enum: ["food", "petfood", "product"],
+      default: "food",
     },
     productName: {
       type: String,
@@ -44,8 +50,11 @@ const scanHistorySchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["Healthy", "Moderate", "Unhealthy"],
       default: "Moderate",
+    },
+    details: {
+      type: mongoose.Schema.Types.Mixed,
+      default: {},
     },
     scanDate: {
       type: Date,
