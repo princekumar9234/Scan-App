@@ -10,8 +10,8 @@ const favoriteRouter = require("./routes/favorite.route");
 app.use(express.json());
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173", // Vercel URL env mein set karo
-    credentials: true, // cookies allow karta hai
+    origin: process.env.FRONTEND_URL || "https://scan-app-ebon.vercel.app/", // Vercel URL env mein set kiya
+    credentials: true, // cookies allow karega
   })
 );
 app.use(cookieParser());
