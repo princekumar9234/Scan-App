@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import ClientServer from "../../Pages/ClientServer";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -72,7 +72,7 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-[#0F172A] text-white pb-12">
-      <Toaster position="top-center" />
+
       <HomeNav />
 
       <div className="max-w-6xl mx-auto px-4 mt-6">

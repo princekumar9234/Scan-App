@@ -7,7 +7,7 @@ import {
   ExternalLink,
   HeartCrack,
 } from "lucide-react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import HomeNav from "../Components/Homes/HomeNav";
 import ClientServer from "./ClientServer";
 import { useNavigate } from "react-router-dom";
@@ -57,7 +57,7 @@ const FavoritesPage = () => {
 
   return (
     <div className="min-h-screen bg-[#0F172A] text-white pb-12">
-      <Toaster position="top-center" />
+
       <HomeNav />
 
       <div className="max-w-6xl mx-auto px-4 mt-6">

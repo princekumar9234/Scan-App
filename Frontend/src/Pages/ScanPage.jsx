@@ -18,7 +18,7 @@ import {
   HeartCrack,
   Upload,
 } from "lucide-react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import HomeNav from "../Components/Homes/HomeNav";
 import ClientServer from "./ClientServer";
 
@@ -358,7 +358,7 @@ const ScanPage = () => {
 
   return (
     <div className="min-h-screen bg-[#0F172A] text-white pb-12">
-      <Toaster position="top-center" reverseOrder={false} />
+
       <HomeNav />
 
       <div className="max-w-4xl mx-auto px-4 mt-6">
