@@ -5,6 +5,7 @@ import ClientServer from "./ClientServer";
 import toast from "react-hot-toast";
 import Navbar from "./Navbar";
 
+
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -15,7 +16,7 @@ const LoginPage = () => {
   const handleForm = (e) => {
     e.preventDefault();
     if (!email.trim() || !password.trim()) {
-      alert("Please fill in all fields.");
+      toast.error("Please fill in all fields.");
       return;
     }
     ClientServer.post("/login", {
@@ -24,7 +25,7 @@ const LoginPage = () => {
     })
       .then((res) => {
         console.log(res);
-        alert(res.data.message);
+        toast.success("Login Successful!");
         if (res.data.user) {
           localStorage.setItem("user", JSON.stringify(res.data.user));
         }
@@ -32,11 +33,10 @@ const LoginPage = () => {
       })
       .catch((error) => {
         console.log(error);
-        // error.response undefined hoga jab network/CORS error ho
         const message =
           error?.response?.data?.message ||
           "Something went wrong. Please try again.";
-        alert(message);
+        toast.error(message);
         setEmail("");
         setPassword("");
       });

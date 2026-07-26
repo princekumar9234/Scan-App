@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, UserPlus, User, Mail, Lock } from "lucide-react";
 import ClientServer from "./ClientServer";
 import Navbar from "./Navbar";
+import toast from "react-hot-toast";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const RegisterPage = () => {
   const handleForm = (e) => {
     e.preventDefault();
     if (!email.trim() || !password.trim()) {
-      alert("Please fill in all fields.");
+      toast.error("Please fill in all fields.");
       return;
     }
 
@@ -26,7 +27,7 @@ const RegisterPage = () => {
       password,
     })
       .then((res) => {
-        alert(res.data.message);
+        toast.success(res.data.message || "Registration Successful!");
         if (res.data.user) {
           localStorage.setItem("user", JSON.stringify(res.data.user));
         }
@@ -35,11 +36,11 @@ const RegisterPage = () => {
       .catch((error) => {
         console.log(error);
         if (error?.response?.status === 409) {
-          alert(error.response.data.message);
+          toast.error(error.response.data.message);
         } else if (error?.response?.status === 400) {
-          alert(error.response.data.error.map((e) => e.msg));
+          toast.error(error.response.data.error.map((e) => e.msg).join(", "));
         } else {
-          alert("Something went wrong. Please check your internet connection!");
+          toast.error("Something went wrong. Please check your internet connection!");
         }
       });
   };

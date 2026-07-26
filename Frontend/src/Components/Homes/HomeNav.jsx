@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import ClientServer from "../../Pages/ClientServer";
+import toast from "react-hot-toast";
 
 const HomeNav = () => {
   const navigate = useNavigate();
@@ -32,11 +33,15 @@ const HomeNav = () => {
   });
 
   const LogoutUser = () => {
-    ClientServer.post("/logout").then((res) => {
-      alert(res.data.message);
-      localStorage.removeItem("user");
-      navigate("/login");
-    });
+    ClientServer.post("/logout")
+      .then((res) => {
+        toast.success(res.data.message || "Logged out successfully!");
+        localStorage.removeItem("user");
+        navigate("/login");
+      })
+      .catch(() => {
+        toast.error("Logout failed. Please try again.");
+      });
   };
 
   // Close dropdown when clicking outside — dono refs check karo

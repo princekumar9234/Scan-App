@@ -21,6 +21,7 @@ import {
 import { MOCK_PRODUCTS } from "../Components/MockScanner";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
+import toast from "react-hot-toast";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -47,7 +48,8 @@ const Dashboard = () => {
   };
 
   const handleClick = () => {
-    (alert("please Login First"), navigate("/login"));
+    toast.error("Please Login First!");
+    navigate("/login");
   };
   return (
     <div className="min-h-screen  overflow-x-hidden font-sans relative">
