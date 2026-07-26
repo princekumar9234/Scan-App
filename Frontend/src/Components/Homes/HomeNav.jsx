@@ -35,9 +35,13 @@ const HomeNav = () => {
   const LogoutUser = () => {
     ClientServer.post("/logout")
       .then((res) => {
-        toast.success(res.data.message || "Logged out successfully!");
+        toast.success(res.data.message || "Logged out successfully!", {
+          duration: 2000,
+        });
         localStorage.removeItem("user");
-        navigate("/login");
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
       })
       .catch(() => {
         toast.error("Logout failed. Please try again.");
