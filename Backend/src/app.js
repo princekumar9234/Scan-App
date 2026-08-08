@@ -10,7 +10,8 @@ const favoriteRouter = require("./routes/favorite.route");
 app.use(express.json());
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/$/, "") : "http://localhost:5173", // Vercel URL env mein set kiya  ("http://localhost:5173/" )
+    origin: process.env.FRONTEND_URL.replace(/\/$/, ""),
+    // origin: "http://localhost:5173", // Vercel URL env mein set kiya  ("http://localhost:5173/" )
     credentials: true, // cookies allow karega
   }),
 );
