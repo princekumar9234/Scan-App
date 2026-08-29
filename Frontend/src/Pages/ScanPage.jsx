@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Html5QrcodeScanner, Html5Qrcode, Html5QrcodeSupportedFormats } from "html5-qrcode";
+import {
+  Html5Qrcode,
+  Html5QrcodeSupportedFormats,
+} from "html5-qrcode";
 import { BrowserMultiFormatReader } from "@zxing/browser";
 import { BarcodeFormat, DecodeHintType } from "@zxing/library";
 import {
@@ -17,6 +20,11 @@ import {
   Activity,
   HeartCrack,
   Upload,
+  SwitchCamera,
+  Zap,
+  ZapOff,
+  ChevronDown,
+  X,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import HomeNav from "../Components/Homes/HomeNav";
@@ -30,19 +38,32 @@ const ScanPage = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [notFound, setNotFound] = useState(false);
   const [cameraActive, setCameraActive] = useState(false);
+  const [cameras, setCameras] = useState([]);
+  const [selectedCameraId, setSelectedCameraId] = useState("");
+  const [isSwitchingCamera, setIsSwitchingCamera] = useState(false);
+  const [torchSupported, setTorchSupported] = useState(false);
+  const [isTorchOn, setIsTorchOn] = useState(false);
 
   const scannerRef = useRef(null);
   const fileInputRef = useRef(null);
 
   // Stop scanner utility
-  const stopScanner = () => {
+  const stopScanner = async () => {
     if (scannerRef.current) {
-      scannerRef.current
-        .clear()
-        .catch((err) => console.log("Clear scanner err:", err));
+      try {
+        if (scannerRef.current.isScanning) {
+          await scannerRef.current.stop();
+        }
+        scannerRef.current.clear();
+      } catch (err) {
+        console.log("Stop scanner err:", err);
+      }
       scannerRef.current = null;
     }
     setCameraActive(false);
+    setIsSwitchingCamera(false);
+    setIsTorchOn(false);
+    setTorchSupported(false);
   };
 
   useEffect(() => {
@@ -68,14 +89,14 @@ const ScanPage = () => {
     setErrorMsg("");
     setProduct(null);
 
-    // ── Helper: Image Preprocessor/Resizer ──────────────────────────────────
+    // Helper: Image Preprocessor/Resizer 
     const preprocessImage = (imageFile, maxDim = 800) => {
       return new Promise((resolve) => {
         const img = new Image();
         img.onload = () => {
           let width = img.width;
           let height = img.height;
-          
+
           if (width > maxDim || height > maxDim) {
             if (width > height) {
               height = Math.round((height * maxDim) / width);
@@ -85,19 +106,21 @@ const ScanPage = () => {
               height = maxDim;
             }
           }
-          
+
           const canvas = document.createElement("canvas");
           canvas.width = width;
           canvas.height = height;
           const ctx = canvas.getContext("2d");
           ctx.drawImage(img, 0, 0, width, height);
-          
+
           canvas.toBlob((blob) => {
             if (blob) {
               const resizedUrl = URL.createObjectURL(blob);
               resolve({
                 url: resizedUrl,
-                file: new File([blob], imageFile.name, { type: imageFile.type })
+                file: new File([blob], imageFile.name, {
+                  type: imageFile.type,
+                }),
               });
             } else {
               resolve({ url: URL.createObjectURL(imageFile), file: imageFile });
@@ -162,7 +185,7 @@ const ScanPage = () => {
       // 1. Preprocess/Resize image
       const resized = await preprocessImage(file, 800);
       const originalUrl = URL.createObjectURL(file);
-      
+
       let detectedCode = null;
 
       // Create format hints map for ZXing
@@ -227,9 +250,7 @@ const ScanPage = () => {
     } catch (err) {
       console.error("Barcode scan error:", err);
       toast.error("Scan failed. Try entering the barcode manually.");
-      setErrorMsg(
-        "Failed to decode barcode from file. Try entering manually.",
-      );
+      setErrorMsg("Failed to decode barcode from file. Try entering manually.");
       setIsLoading(false);
     }
   };
@@ -238,51 +259,165 @@ const ScanPage = () => {
     fileInputRef.current?.click();
   };
 
-  const startScanner = () => {
-    setErrorMsg("");
-    setCameraActive(true);
+  const startCameraWithDevice = async (cameraIdOrConfig) => {
+    try {
+      const container = document.getElementById("reader-custom");
+      if (!container) return;
 
-    // Defer initialization slightly to ensure the reader div is in the DOM
-    setTimeout(() => {
-      try {
-        const formats = [
-          Html5QrcodeSupportedFormats?.EAN_13 || 9,
-          Html5QrcodeSupportedFormats?.EAN_8 || 10,
-          Html5QrcodeSupportedFormats?.UPC_A || 14,
-          Html5QrcodeSupportedFormats?.UPC_E || 15,
-          Html5QrcodeSupportedFormats?.CODE_128 || 5,
-          Html5QrcodeSupportedFormats?.QR_CODE || 0,
-        ];
+      // Stop previous instance if running
+      if (scannerRef.current) {
+        if (scannerRef.current.isScanning) {
+          await scannerRef.current.stop();
+        }
+        scannerRef.current.clear();
+        scannerRef.current = null;
+      }
 
-        const scanner = new Html5QrcodeScanner(
-          "reader",
-          {
-            fps: 10,
-            qrbox: { width: 280, height: 180 },
-            rememberLastUsedCamera: true,
-            formatsToSupport: formats,
-          },
-          false,
-        );
+      const formats = [
+        Html5QrcodeSupportedFormats?.EAN_13 || 9,
+        Html5QrcodeSupportedFormats?.EAN_8 || 10,
+        Html5QrcodeSupportedFormats?.UPC_A || 14,
+        Html5QrcodeSupportedFormats?.UPC_E || 15,
+        Html5QrcodeSupportedFormats?.CODE_128 || 5,
+        Html5QrcodeSupportedFormats?.CODE_39 || 4,
+        Html5QrcodeSupportedFormats?.QR_CODE || 0,
+      ];
 
-        scannerRef.current = scanner;
+      const html5Qr = new Html5Qrcode("reader-custom", {
+        formatsToSupport: formats,
+        verbose: false,
+      });
 
-        const onScanSuccess = async (decodedText) => {
+      scannerRef.current = html5Qr;
+
+      const qrboxFunction = (viewfinderWidth, viewfinderHeight) => {
+        const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
+        const w = Math.min(320, Math.floor(minEdge * 0.85));
+        const h = Math.min(200, Math.floor(w * 0.65));
+        return { width: w, height: h };
+      };
+
+      await html5Qr.start(
+        cameraIdOrConfig,
+        {
+          fps: 15,
+          qrbox: qrboxFunction,
+          aspectRatio: 1.333333,
+        },
+        (decodedText) => {
           stopScanner();
           handleSearch(decodedText);
-        };
+        },
+        () => {}
+      );
 
-        const onScanError = (err) => {
-          // Silent errors on camera frame scans are normal
-        };
-
-        scanner.render(onScanSuccess, onScanError);
-      } catch (err) {
-        console.error("Scanner init error:", err);
-        setErrorMsg("Failed to access camera device. Check permissions.");
-        setCameraActive(false);
+      // Check for torch capability if available
+      try {
+        const capabilities = html5Qr.getRunningTrackCameraCapabilities?.();
+        if (capabilities && capabilities.torchFeature && capabilities.torchFeature().isSupported()) {
+          setTorchSupported(true);
+        } else {
+          setTorchSupported(false);
+        }
+      } catch (e) {
+        setTorchSupported(false);
       }
-    }, 100);
+    } catch (err) {
+      console.error("Camera start error:", err);
+      setErrorMsg("Failed to start camera. Check permissions or device availability.");
+      stopScanner();
+    }
+  };
+
+  const startScanner = async () => {
+    setErrorMsg("");
+    setCameraActive(true);
+    setIsSwitchingCamera(true);
+
+    try {
+      // Query cameras
+      const devices = await Html5Qrcode.getCameras().catch(() => []);
+      setCameras(devices || []);
+
+      let initialCam = null;
+      if (devices && devices.length > 0) {
+        // Prioritize rear/environment/back cameras
+        const rearCam = devices.find((d) =>
+          /back|rear|environment|main|out/i.test(d.label || "")
+        );
+        initialCam = rearCam ? rearCam.id : devices[0].id;
+        setSelectedCameraId(initialCam);
+      }
+
+      // Small delay to ensure the DOM is mounted
+      setTimeout(async () => {
+        if (initialCam) {
+          await startCameraWithDevice(initialCam);
+        } else {
+          await startCameraWithDevice({ facingMode: "environment" });
+        }
+        setIsSwitchingCamera(false);
+      }, 150);
+    } catch (err) {
+      console.error("Scanner init error:", err);
+      setTimeout(async () => {
+        await startCameraWithDevice({ facingMode: "environment" });
+        setIsSwitchingCamera(false);
+      }, 150);
+    }
+  };
+
+  const handleSwitchCamera = async (targetCameraId) => {
+    if (!scannerRef.current || isSwitchingCamera) return;
+    setIsSwitchingCamera(true);
+    try {
+      let nextId = targetCameraId;
+      if (!nextId) {
+        // Toggle to next available camera
+        if (cameras.length > 1) {
+          const currentIndex = cameras.findIndex((c) => c.id === selectedCameraId);
+          const nextIndex = (currentIndex + 1) % cameras.length;
+          nextId = cameras[nextIndex].id;
+        } else {
+          // If labels weren't available, toggle facingMode
+          nextId =
+            selectedCameraId === "user"
+              ? { facingMode: "environment" }
+              : { facingMode: "user" };
+        }
+      }
+
+      const newIdString = typeof nextId === "string" ? nextId : nextId.facingMode;
+      setSelectedCameraId(newIdString);
+      await startCameraWithDevice(nextId);
+
+      const activeLabel =
+        cameras.find((c) => c.id === newIdString)?.label || "Camera switched";
+      toast.success(
+        activeLabel.length > 28 ? activeLabel.slice(0, 28) + "..." : activeLabel,
+        { id: "cam-switch" }
+      );
+    } catch (err) {
+      console.error("Failed to switch camera:", err);
+      toast.error("Failed to switch camera.");
+    } finally {
+      setIsSwitchingCamera(false);
+    }
+  };
+
+  const toggleTorch = async () => {
+    if (!scannerRef.current || !torchSupported) return;
+    try {
+      const nextState = !isTorchOn;
+      await scannerRef.current.applyVideoConstraints({
+        advanced: [{ torch: nextState }],
+      });
+      setIsTorchOn(nextState);
+      toast.success(nextState ? "Flashlight On" : "Flashlight Off", { id: "torch" });
+    } catch (err) {
+      console.error("Torch error:", err);
+      toast.error("Could not toggle flashlight.");
+    }
   };
 
   const handleSearchSubmit = (e) => {
@@ -358,7 +493,6 @@ const ScanPage = () => {
 
   return (
     <div className="min-h-screen bg-[#0F172A] text-white pb-12">
-
       <HomeNav />
 
       <div className="max-w-4xl mx-auto px-4 mt-6">
@@ -439,14 +573,124 @@ const ScanPage = () => {
             </div>
           </form>
 
-          {/* Scanner Viewport */}
+          {/* Sleek Modern Scanner Viewport */}
           {cameraActive && (
-            <div className="mt-6 border-2 border-dashed border-emerald-500/30 rounded-2xl overflow-hidden bg-black p-4 relative">
-              <div className="absolute inset-x-0 h-0.5 bg-emerald-500 shadow-[0_0_8px_#10b981] top-1/2 -translate-y-1/2 animate-laser z-10 pointer-events-none"></div>
-              <div id="reader" className="w-full max-w-md mx-auto"></div>
-              <p className="text-center text-xs text-neutral-400 mt-2 font-mono">
-                Position the barcode inside the camera viewpoint.
-              </p>
+            <div className="mt-6 bg-[#141414] border border-neutral-800 rounded-2xl overflow-hidden shadow-[0_12px_36px_rgba(0,0,0,0.8)] relative">
+              {/* Top Live Camera Control Bar */}
+              <div className="bg-neutral-900/90 backdrop-blur-md px-4 py-3 border-b border-neutral-800 flex flex-wrap items-center justify-between gap-3">
+                {/* Left: Camera Selector Dropdown */}
+                <div className="flex items-center gap-2 flex-1 min-w-[200px]">
+                  <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-lg">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    LIVE
+                  </div>
+                  
+                  {cameras.length > 0 ? (
+                    <div className="relative flex-1 max-w-xs">
+                      <select
+                        value={selectedCameraId}
+                        onChange={(e) => handleSwitchCamera(e.target.value)}
+                        disabled={isSwitchingCamera}
+                        className="w-full appearance-none bg-black/60 border border-neutral-700 hover:border-emerald-500/50 text-neutral-200 text-xs font-medium py-1.5 pl-3 pr-8 rounded-lg outline-none cursor-pointer transition focus:ring-1 focus:ring-emerald-400"
+                      >
+                        {cameras.map((cam, idx) => (
+                          <option key={cam.id || idx} value={cam.id} className="bg-neutral-900 text-white">
+                            {cam.label || `Camera ${idx + 1}`}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown size={14} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
+                    </div>
+                  ) : (
+                    <span className="text-xs text-neutral-400 font-medium truncate">
+                      Standard Camera Active
+                    </span>
+                  )}
+                </div>
+
+                {/* Right: Switch & Torch & Close Actions */}
+                <div className="flex items-center gap-2 shrink-0">
+                  {/* Flip / Switch Camera Button */}
+                  <button
+                    type="button"
+                    onClick={() => handleSwitchCamera()}
+                    disabled={isSwitchingCamera}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-neutral-800 hover:bg-emerald-500/20 hover:text-emerald-300 hover:border-emerald-500/40 border border-neutral-700 text-neutral-200 text-xs font-semibold rounded-lg transition-all cursor-pointer shadow-sm disabled:opacity-50"
+                    title="Switch Camera (Front/Back/Next)"
+                  >
+                    <SwitchCamera size={15} className={isSwitchingCamera ? "animate-spin text-emerald-400" : "text-emerald-400"} />
+                    <span>Switch Camera</span>
+                  </button>
+
+                  {/* Torch Button (if supported) */}
+                  {torchSupported && (
+                    <button
+                      type="button"
+                      onClick={toggleTorch}
+                      className={`p-1.5 rounded-lg border transition-all cursor-pointer ${
+                        isTorchOn
+                          ? "bg-yellow-500/20 border-yellow-500/50 text-yellow-300 shadow-[0_0_12px_rgba(234,179,8,0.4)]"
+                          : "bg-neutral-800 border-neutral-700 text-neutral-400 hover:text-neutral-200"
+                      }`}
+                      title={isTorchOn ? "Turn off Flash" : "Turn on Flash"}
+                    >
+                      {isTorchOn ? <Zap size={16} /> : <ZapOff size={16} />}
+                    </button>
+                  )}
+
+                  {/* Close Button */}
+                  <button
+                    type="button"
+                    onClick={stopScanner}
+                    className="p-1.5 bg-red-950/30 border border-red-500/30 text-red-400 hover:bg-red-900/60 hover:text-red-300 rounded-lg transition cursor-pointer"
+                    title="Close Camera"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Video Viewport Area */}
+              <div className="relative bg-black flex items-center justify-center min-h-[320px] max-h-[460px] overflow-hidden">
+                {/* Target Scanning Reticle Overlay */}
+                <div className="absolute inset-0 pointer-events-none z-20 flex items-center justify-center">
+                  <div className="relative w-[280px] h-[180px] sm:w-[320px] sm:h-[200px]">
+                    {/* Top-Left Corner */}
+                    <div className="absolute -top-1 -left-1 w-7 h-7 border-t-3 border-l-3 border-emerald-400 rounded-tl-lg shadow-[0_0_8px_#10b981]"></div>
+                    {/* Top-Right Corner */}
+                    <div className="absolute -top-1 -right-1 w-7 h-7 border-t-3 border-r-3 border-emerald-400 rounded-tr-lg shadow-[0_0_8px_#10b981]"></div>
+                    {/* Bottom-Left Corner */}
+                    <div className="absolute -bottom-1 -left-1 w-7 h-7 border-b-3 border-l-3 border-emerald-400 rounded-bl-lg shadow-[0_0_8px_#10b981]"></div>
+                    {/* Bottom-Right Corner */}
+                    <div className="absolute -bottom-1 -right-1 w-7 h-7 border-b-3 border-r-3 border-emerald-400 rounded-br-lg shadow-[0_0_8px_#10b981]"></div>
+
+                    {/* Glowing Laser Scan Line */}
+                    <div className="absolute inset-x-0 h-0.5 bg-emerald-400 shadow-[0_0_12px_#10b981] animate-laser"></div>
+                  </div>
+                </div>
+
+                {/* HTML5 QR Container */}
+                <div id="reader-custom" className="w-full h-full flex items-center justify-center"></div>
+
+                {/* Loading Overlay when switching */}
+                {isSwitchingCamera && (
+                  <div className="absolute inset-0 bg-black/75 backdrop-blur-xs flex flex-col items-center justify-center z-30 gap-3">
+                    <RefreshCw size={28} className="animate-spin text-emerald-400" />
+                    <span className="text-xs text-neutral-300 font-medium">Switching camera...</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Bottom Helper Bar */}
+              <div className="bg-neutral-950/80 px-4 py-2.5 border-t border-neutral-800/80 flex items-center justify-between text-xs text-neutral-400">
+                <span className="flex items-center gap-1.5">
+                  <Scan size={14} className="text-emerald-400" />
+                  Align barcode horizontally within the green box
+                </span>
+                <span className="font-mono text-[11px] text-neutral-500 hidden sm:inline">
+                  Auto-Focusing
+                </span>
+              </div>
             </div>
           )}
         </div>
@@ -493,8 +737,22 @@ const ScanPage = () => {
               {/* Icon */}
               <div className="relative mb-6">
                 <div className="w-20 h-20 rounded-full bg-orange-500/10 border border-orange-500/20 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-orange-400">
-                    <path d="M3 7v4a1 1 0 001 1h3" /><path d="M7 7V5" /><path d="M16 11V7" /><path d="M16 11h-2.5" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="36"
+                    height="36"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="text-orange-400"
+                  >
+                    <path d="M3 7v4a1 1 0 001 1h3" />
+                    <path d="M7 7V5" />
+                    <path d="M16 11V7" />
+                    <path d="M16 11h-2.5" />
                     <path d="M20 7v4a1 1 0 01-1 1h-1" />
                     <rect x="1" y="3" width="22" height="4" rx="1" />
                     <path d="M9 17H5a2 2 0 00-2 2v2" />
@@ -506,7 +764,9 @@ const ScanPage = () => {
                 <span className="absolute inset-0 rounded-full border border-orange-400/30 animate-ping opacity-40"></span>
               </div>
 
-              <h3 className="text-xl font-extrabold text-white mb-2">Product Not Found</h3>
+              <h3 className="text-xl font-extrabold text-white mb-2">
+                Product Not Found
+              </h3>
               <p className="text-sm text-neutral-400 max-w-sm leading-relaxed mb-1">
                 The barcode you scanned is not in our food database.
               </p>
@@ -521,15 +781,23 @@ const ScanPage = () => {
                   { icon: "💡", tip: "Try a different angle" },
                   { icon: "🌍", tip: "Product may not be listed yet" },
                 ].map((t, i) => (
-                  <div key={i} className="bg-black/40 border border-neutral-800 rounded-xl p-3 flex flex-col items-center gap-1">
+                  <div
+                    key={i}
+                    className="bg-black/40 border border-neutral-800 rounded-xl p-3 flex flex-col items-center gap-1"
+                  >
                     <span className="text-xl">{t.icon}</span>
-                    <span className="text-xs text-neutral-400 text-center">{t.tip}</span>
+                    <span className="text-xs text-neutral-400 text-center">
+                      {t.tip}
+                    </span>
                   </div>
                 ))}
               </div>
 
               <button
-                onClick={() => { setNotFound(false); setBarcode(""); }}
+                onClick={() => {
+                  setNotFound(false);
+                  setBarcode("");
+                }}
                 className="mt-6 px-6 py-2.5 bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/30 text-orange-300 hover:text-orange-200 text-sm font-semibold rounded-xl transition cursor-pointer"
               >
                 Try Again
@@ -551,8 +819,12 @@ const ScanPage = () => {
               </div>
 
               <div className="grow text-center sm:text-left">
-                <h3 className="font-extrabold text-lg text-white">Request Failed</h3>
-                <p className="text-sm text-neutral-400 mt-1 leading-relaxed">{errorMsg}</p>
+                <h3 className="font-extrabold text-lg text-white">
+                  Request Failed
+                </h3>
+                <p className="text-sm text-neutral-400 mt-1 leading-relaxed">
+                  {errorMsg}
+                </p>
               </div>
 
               <button
@@ -577,7 +849,9 @@ const ScanPage = () => {
                 <div className="absolute inset-0 rounded-full border border-emerald-500/20 animate-pulse"></div>
               </div>
 
-              <h3 className="text-xl font-extrabold text-neutral-200 mb-2">Ready to Scan</h3>
+              <h3 className="text-xl font-extrabold text-neutral-200 mb-2">
+                Ready to Scan
+              </h3>
               <p className="text-sm text-neutral-500 max-w-sm leading-relaxed">
                 Enter a barcode number, upload an image, or use the live camera
                 scanner to instantly fetch ingredients &amp; health analysis.
@@ -591,8 +865,12 @@ const ScanPage = () => {
                   { icon: "🖼️", label: "Upload Image" },
                   { icon: "⚡", label: "Instant Analysis" },
                 ].map((f, i) => (
-                  <span key={i} className="text-xs px-3 py-1.5 rounded-full bg-neutral-800/60 border border-neutral-700 text-neutral-400 flex items-center gap-1.5">
-                    <span>{f.icon}</span>{f.label}
+                  <span
+                    key={i}
+                    className="text-xs px-3 py-1.5 rounded-full bg-neutral-800/60 border border-neutral-700 text-neutral-400 flex items-center gap-1.5"
+                  >
+                    <span>{f.icon}</span>
+                    {f.label}
                   </span>
                 ))}
               </div>

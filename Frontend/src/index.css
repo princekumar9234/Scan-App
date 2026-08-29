@@ -41,3 +41,29 @@ body {
   background: #1f2937;
   border-radius: 9px;
 }
+
+/* Custom Scanner Viewport Styling */
+#reader-custom {
+  width: 100% !important;
+  border: none !important;
+  position: relative;
+  overflow: hidden;
+}
+
+#reader-custom video {
+  width: 100% !important;
+  max-height: 460px !important;
+  object-fit: cover !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+#reader-custom img,
+#reader-custom canvas {
+  display: none !important;
+}
+
+#reader-custom__dashboard_section,
+#reader-custom__header_message {
+  display: none !important;
+}
