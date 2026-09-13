@@ -10,7 +10,7 @@ const Navbar = () => {
       <div className="flex justify-between border-2 m-3 mt-3 rounded-2xl border-neutral-800 bg-[#0c0f16]/90 backdrop-blur-md shadow-[0_8px_20px_rgba(0,0,0,0.6)] items-center py-4 px-6">
         {/* Logo */}
         <div className="font-bold text-2xl flex items-center whitespace-nowrap gap-2">
-          <span>Scan</span> <span className="text-yellow-600">App</span>
+          <span>Food</span> <span className="text-yellow-600">factz</span>
         </div>
 
         {/* Desktop Menu */}
