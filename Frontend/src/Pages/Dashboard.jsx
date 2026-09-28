@@ -26,20 +26,20 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [currentProduct, setCurrentProduct] = useState(MOCK_PRODUCTS.lays);
 
+ // const handleScan = () => {
+ //    // Cycle products to simulate scanning
+ //    const products = ["oreo", "apple", "lays"];
+ //    let cycleIndex = 0;
 
-    // Cycle products to simulate scanning
-    const products = ["oreo", "apple", "lays"];
-    let cycleIndex = 0;
-
-    const interval = setInterval(() => {
-      if (cycleIndex < products.length) {
-        setCurrentProduct(MOCK_PRODUCTS[products[cycleIndex]]);
-        cycleIndex++;
-      } else {
-        clearInterval(interval);
-      }
-    }, 2000);
-  };
+ //    const interval = setInterval(() => {
+ //      if (cycleIndex < products.length) {
+ //        setCurrentProduct(MOCK_PRODUCTS[products[cycleIndex]]);
+ //        cycleIndex++;
+ //      } else {
+ //        clearInterval(interval);
+ //      }
+ //    }, 2000);
+ //  };
 
   const handleClick = () => {
     toast.error("Please Login First!");
