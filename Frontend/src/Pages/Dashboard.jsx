@@ -8,7 +8,6 @@ import {
   Shield,
   History,
   Star,
-  ChevronRight,
   AlertTriangle,
   Award,
   CheckCircle2,
@@ -26,11 +25,7 @@ import toast from "react-hot-toast";
 const Dashboard = () => {
   const navigate = useNavigate();
   const [currentProduct, setCurrentProduct] = useState(MOCK_PRODUCTS.lays);
-  const [isDemoRunning, setIsDemoRunning] = useState(false);
 
-  const startWatchDemo = () => {
-    if (isDemoRunning) return;
-    setIsDemoRunning(true);
 
     // Cycle products to simulate scanning
     const products = ["oreo", "apple", "lays"];
@@ -42,7 +37,6 @@ const Dashboard = () => {
         cycleIndex++;
       } else {
         clearInterval(interval);
-        setIsDemoRunning(false);
       }
     }, 2000);
   };
@@ -98,23 +92,10 @@ const Dashboard = () => {
                   className="transition-transform group-hover:scale-110"
                 />
                 <span>Scan a Product Now</span>
-                <ChevronRight
-                  size={16}
-                  className="transition-transform group-hover:translate-x-1"
-                />
+                
               </button>
 
-              <button
-                onClick={startWatchDemo}
-                disabled={isDemoRunning}
-                className="px-6 py-4 rounded-xl font-bold border border-neutral-800 bg-neutral-900/60 hover:bg-neutral-850 hover:border-neutral-700 flex items-center justify-center gap-3 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer text-base text-neutral-200"
-              >
-                <Play
-                  size={18}
-                  className={`fill-white/10 ${isDemoRunning ? "animate-spin" : ""}`}
-                />
-                <span>{isDemoRunning ? "Running Demo..." : "Watch Demo"}</span>
-              </button>
+  
             </div>
 
             {/* Checkmark badges */}
